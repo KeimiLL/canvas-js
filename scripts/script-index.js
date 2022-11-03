@@ -2,6 +2,8 @@
 // w pliku script-index mam mieć tablicę obiektów i też zmienną która przechowuje kolejne dostęppne ID
 
 const IDs = 0;
+const pathJSON = "../canvas_data.json";
+
 
 const createBtn = document.querySelector('#create-btn');
 

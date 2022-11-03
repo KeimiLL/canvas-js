@@ -14,13 +14,26 @@
 <body>
 
     <div class="main-div">
-        <h1>Edytuj istniejące lub stwórz nowy</h1>
+        
 
         <button id="create-btn" onclick="window.location.href='drawing.php';">Stwórz nowy</button>
-
+        
+        <p>lub edytuj istniejące</p>
+        
         <div class="div-drawings"></div>
     </div>
 
+
+    <?php
+        $file = file_get_contents("canvas_data.json");
+        $arr = array();
+
+        // foreach ($arr as &$value)
+
+        $json_decoded = json_decode($file);
+        
+        echo '<a href="#"><img style="background-color:white;" border="3px solid black" width="30%" src="'.$json_decoded->img.'"></a>';
+    ?>
 
 
     <script src="scripts/script-index.js"></script>
