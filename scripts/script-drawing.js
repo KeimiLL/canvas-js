@@ -1,7 +1,6 @@
-const touchesCaptured = []
-
 class Canvas {
     constructor(canvas, context, color, thickness, radioBtns) {
+
         this.canvas = canvas;
         this.context = context;
         this.position = null;
@@ -13,9 +12,7 @@ class Canvas {
         this.radioValue = "1";
 
         this.offs = null;
-        // context.beginPath();
-        // context.rect(20, 20, 150, 100);
-        // context.stroke();
+        
         this.changeCap();
         this.startX = null;
         this.startY = null;
@@ -164,8 +161,6 @@ class Canvas {
     }
 
 }
-
-
 
 
 const canvas = document.querySelector('#canvas');

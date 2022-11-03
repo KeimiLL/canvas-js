@@ -18,7 +18,7 @@
 
         <button id="create-btn" onclick="window.location.href='drawing.php';">Stwórz nowy</button>
 
-        <div class="div-loading">Wczytaj: <input type="file" id="load"></div>
+        <div class="div-drawings"></div>
     </div>
 
 
