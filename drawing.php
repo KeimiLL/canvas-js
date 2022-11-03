@@ -45,24 +45,67 @@
 
 
     <?php
-    //najpierw wczytam to co już mam do tablicy i na koniec tablicy dodam następny element
+    // najnowsza wersja
+        if(file_exists('canvas_data.json'))
+        {
+            $final_data=fileWriteAppend();
+            if(file_put_contents('canvas_data.json', $final_data))
+            {
+                echo "<p>Dane zostały dodane</p>";
+            }
+        }
+        else
+        {
+            // $final_data=fileCreateWrite();
+            if(file_put_contents('canvas_data.json', ""))
+            {
+                echo "<p>Plik stworzony i dane dodane</p>";
+            }
         
-        $file = "";
-
-        if (file_exists("canvas_data.json")) {
-            $file = file_get_contents("canvas_data.json");
-        } else {
-            file_put_contents("canvas_data.json", "");
+        }
+        function fileWriteAppend(){
+            $current_data = file_get_contents("php://input");
+            $array_data = json_decode($current_data, true);
+            $extra = array(
+                'img' => $_POST['img']
+            );
+            $array_data[] = $extra;
+            $final_data = json_encode($array_data);
+            return $final_data;
+        }
+        function fileCreateWrite(){
+            $file=fopen("canvas_data.json","w");
+            // $array_data=array();
+            // $extra = array(
+            //     'date' => $_POST['date'],
+            //     'img' => $_POST['img']
+            // );
+            // $array_data[] = $extra;
+            // $final_data = json_encode($array_data);
+            fclose($file);
+            return $final_data;
         }
 
-        $arr = array();
+
+
+
+
+        // $file = "";
+
+        // if (file_exists("canvas_data.json")) {
+        //     $file = file_get_contents("canvas_data.json");
+        // } else {
+        //     file_put_contents("canvas_data.json", "");
+        // }
+
+        // console.log($file);
 
 
 
 
         // file_get_contents() - czyta całośc do stringa
         // daję "php://input" żeby uzyskać ciało żądania (request)
-        $requestPayload = file_get_contents("php://input");
+        // $requestPayload = file_get_contents("php://input");
 
         // tworzymy po to żeby potem wyświetlić tego JSONa jako obiekt PHPa
         // $object = json_decode($requestPayload);
@@ -72,7 +115,7 @@
         // var_dump($object);
 
 
-        file_put_contents("canvas_data.json", $requestPayload, FILE_APPEND);
+        // file_put_contents("canvas_data.json", $requestPayload, FILE_APPEND);
 
     ?>
 

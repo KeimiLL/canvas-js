@@ -144,7 +144,7 @@ class Canvas {
 
     // próba zapisu do JSON
     saveToJSON() {
-        const jsonStr = JSON.stringify({date: Date.now(), img: this.canvas.toDataURL() });
+        const jsonStr = JSON.stringify({img: this.canvas.toDataURL() });
         console.log(jsonStr);
         this.sendJSON(jsonStr);
         return jsonStr;
