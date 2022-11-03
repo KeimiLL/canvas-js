@@ -1,0 +1,182 @@
+* {
+    background-color: #7fbada;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-size: 105%;
+}
+
+#clear-btn{
+    background-color: rgb(144, 255, 130);
+}
+
+#undo-btn{
+    background-color: rgb(234, 255, 113);
+}
+
+#save-btn{
+    background-color: rgb(255, 210, 112);
+}
+
+#clear-btn, #undo-btn, #save-btn {
+    width: 90px;
+    height: 35px;
+    font-size: 17px;
+    font-weight: bold;
+    
+    border: 2px solid #555;
+
+    margin-bottom: 20px;
+}
+
+#back-btn {
+    width: 170px;
+    height: 55px;
+    font-weight: bold;
+    font-size: 17px;
+    background-color: rgb(233, 122, 255);
+    border: 2px solid #555;
+}
+
+/* main-div { 
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.feature {
+    margin-top: 10px;
+}
+
+.feature label,
+.feature input {
+    display: inline-block;
+    text-align: right;
+}
+
+.feature input {
+    width: 40%;
+    text-align: left;
+}
+
+.feature label {
+    width: 10%;
+    min-width: 80px;
+    margin-right: 10px;
+    font-size: 13px;
+}
+
+input[type="color"] {
+    border: 1px solid black;
+    border-radius: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    appearance: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border-radius: 30px;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 30px;
+} */
+
+
+
+
+
+.main-div {
+    padding-top: 20px;
+
+    text-align: center;
+}
+
+.properties {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.feature {
+    text-align: center;
+    margin: 10px auto;
+}
+
+#canvas {
+    background-color: white;
+}
+
+label {
+    padding-right: 5px;
+}
+
+#div-shapes {
+    display: flex;
+    margin-bottom: 10px;
+    padding: 0;
+    justify-content:space-evenly;
+    align-items: center;
+
+    font-size: 50px;
+}
+
+#div-shapes input {
+    margin-right: 5px;
+}
+
+
+
+@media (orientation: landscape) {
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .main-div {
+        margin: 0;
+    }
+
+    .properties {
+        margin: 0;
+        /* margin-top: 80px; */
+        text-align: center;
+        min-width: 50px;
+    }
+
+    .feature {
+        margin: 0;
+        margin: 10px 0px;
+        padding: 0;
+    }
+
+    #clear-btn, #undo-btn {
+        margin: 10px 0px;
+        padding: 0;
+    }
+
+    #div-shapes {
+        display: flex;
+        margin-bottom: 10px;
+        padding: 0;
+        justify-content:space-between;
+        align-items: center;
+    }
+
+    #div-shapes label {
+        margin-right: 20px;
+    }
+
+    #div-shapes label:last-of-type {
+        margin-right: 0px;
+    }
+}

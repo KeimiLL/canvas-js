@@ -1,0 +1,29 @@
+* {
+    background-color: #a3da7f;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-size: 110%;
+}
+
+body {
+    text-align: center;
+}
+
+.main-div {
+    margin: 20px auto;
+}
+
+.div-loading {
+    margin: 10px auto;
+}
+
+#create-btn {
+    width: 130px;
+    height: 35px;
+    font-size: 17px;
+    background-color: rgb(190, 155, 212);
+    border: 2px solid #555;
+    margin: 10px auto;
+}
