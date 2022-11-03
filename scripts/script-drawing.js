@@ -18,6 +18,10 @@ class Canvas {
         this.changeCap();
         this.startX = null;
         this.startY = null;
+
+        // potrzebne do undo()
+        this.curvesArray = [];
+        this.idxCurvesArray = -1;
     }
 
     // sprawdzenie i ustawienie rysowania konkretnego kształtu
@@ -37,6 +41,9 @@ class Canvas {
     clearAll() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         // console.log("Zawartość wyczyszczona");
+
+        this.curvesArray = [];
+        this.idxCurvesArray = -1;
     }
 
     // żeby element nie musiał być w lewym górnym rogu, to licze offsety
@@ -111,6 +118,8 @@ class Canvas {
             this.context.stroke();
 
         this.position = null;
+        this.curvesArray.push(this.context.getImageData(0, 0, this.canvas.width, this.canvas.height));
+        this.idxCurvesArray += 1;
     }
 
     // zmiana koloru
@@ -162,13 +171,29 @@ class Canvas {
         xhr.send(jsonStr);
     }
 
+    // usuwa ostatnią narysowaną rzecz
+    undo() {
+        if(this.idxCurvesArray <= 0) {
+            this.clearAll();
+            return;
+        }
+
+        this.idxCurvesArray -= 1;
+        this.curvesArray.pop();
+        this.context.putImageData(this.curvesArray[this.idxCurvesArray], 0, 0);
+    }
+
 }
 
 
 const canvas = document.querySelector('#canvas');
-const context = canvas.getContext('2d');
+
+// dodałem drugi argument {willReadFrequently: true} 
+// bo był warning przy samym '2d'
+const context = canvas.getContext('2d', {willReadFrequently: true});
 
 const clearBtn = document.querySelector('#clear-btn');
+const undoBtn = document.querySelector('#undo-btn');
 const thickness = document.querySelector('#slider');
 const thicknessText = document.querySelector('#slider-value');
 
@@ -181,6 +206,10 @@ const myCanvas = new Canvas(canvas, context, color, thickness, radioBtnsShape);
 
 clearBtn.addEventListener('click', () => {
     myCanvas.clearAll();
+})
+
+undoBtn.addEventListener('click', () => {
+    myCanvas.undo();
 })
 
 color.addEventListener('input', () => {

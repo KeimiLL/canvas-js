@@ -45,6 +45,20 @@
 
 
     <?php
+    //najpierw wczytam to co już mam do tablicy i na koniec tablicy dodam następny element
+        
+        $file = "";
+
+        if (file_exists("canvas_data.json")) {
+            $file = file_get_contents("canvas_data.json");
+        } else {
+            file_put_contents("canvas_data.json", "");
+        }
+
+        $arr = array();
+
+
+
 
         // file_get_contents() - czyta całośc do stringa
         // daję "php://input" żeby uzyskać ciało żądania (request)
