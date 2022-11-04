@@ -1,3 +1,5 @@
+let ID = 0;
+
 class Canvas {
     constructor(canvas, context, color, thickness, radioBtns) {
 
@@ -144,7 +146,7 @@ class Canvas {
 
     // próba zapisu do JSON
     saveToJSON() {
-        const jsonStr = JSON.stringify({img: this.canvas.toDataURL() });
+        const jsonStr = JSON.stringify({id: ID++,img: this.canvas.toDataURL() });
         console.log(jsonStr);
         this.sendJSON(jsonStr);
         return jsonStr;

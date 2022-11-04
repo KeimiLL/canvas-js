@@ -46,6 +46,8 @@
 
     <?php
     // najnowsza wersja
+        
+
         if(file_exists('canvas_data.json'))
         {
             $final_data=fileWriteAppend();
@@ -57,16 +59,18 @@
         else
         {
             // $final_data=fileCreateWrite();
-            if(file_put_contents('canvas_data.json', ""))
-            {
-                echo "<p>Plik stworzony i dane dodane</p>";
-            }
+            // if(file_put_contents('canvas_data.json', ""))
+            // {
+            //     echo "<p>Plik stworzony i dane dodane</p>";
+            // }
         
         }
         function fileWriteAppend(){
             $current_data = file_get_contents("php://input");
             $array_data = json_decode($current_data, true);
+
             $extra = array(
+                'id' => $_POST['id'],
                 'img' => $_POST['img']
             );
             $array_data[] = $extra;
@@ -74,7 +78,7 @@
             return $final_data;
         }
         function fileCreateWrite(){
-            $file=fopen("canvas_data.json","w");
+            // $file=fopen("canvas_data.json","w");
             // $array_data=array();
             // $extra = array(
             //     'date' => $_POST['date'],
@@ -82,8 +86,8 @@
             // );
             // $array_data[] = $extra;
             // $final_data = json_encode($array_data);
-            fclose($file);
-            return $final_data;
+            // fclose($file);
+            // return $final_data;
         }
 
 
