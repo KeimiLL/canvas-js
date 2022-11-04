@@ -146,7 +146,7 @@ class Canvas {
 
     // próba zapisu do JSON
     saveToJSON() {
-        const jsonStr = JSON.stringify({id: ID++,img: this.canvas.toDataURL() });
+        const jsonStr = JSON.stringify({img: this.canvas.toDataURL()});
         console.log(jsonStr);
         this.sendJSON(jsonStr);
         return jsonStr;
@@ -163,7 +163,7 @@ class Canvas {
         // open() inicjuje żądanie
         // najpierw metoda, czyli POST 
         // potem URL do którego ma zostać wysłane żądanie (request)
-        xhr.open("POST", "drawing.php");
+        xhr.open("POST", "canvas.php", false);
 
         // ustawia wartość nagłówka żądania HTTP
         // podaję nazwę nagłówka i wartość do ustawienia jako treść tego nagłówka
