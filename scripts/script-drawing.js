@@ -16,7 +16,7 @@ class Canvas {
         this.radioValue = "1";
 
         this.offs = null;
-        
+
         this.changeCap();
         this.startX = null;
         this.startY = null;
@@ -146,7 +146,7 @@ class Canvas {
 
     // próba zapisu do JSON
     saveToJSON() {
-        const jsonStr = JSON.stringify({img: this.canvas.toDataURL()});
+        const jsonStr = JSON.stringify({ img: this.canvas.toDataURL() });
         console.log(jsonStr);
         this.sendJSON(jsonStr);
         return jsonStr;
@@ -175,7 +175,7 @@ class Canvas {
 
     // usuwa ostatnią narysowaną rzecz
     undo() {
-        if(this.idxCurvesArray <= 0) {
+        if (this.idxCurvesArray <= 0) {
             this.clearAll();
             return;
         }
@@ -192,7 +192,7 @@ const canvas = document.querySelector('#canvas');
 
 // dodałem drugi argument {willReadFrequently: true} 
 // bo był warning przy samym '2d'
-const context = canvas.getContext('2d', {willReadFrequently: true});
+const context = canvas.getContext('2d', { willReadFrequently: true });
 
 const clearBtn = document.querySelector('#clear-btn');
 const undoBtn = document.querySelector('#undo-btn');

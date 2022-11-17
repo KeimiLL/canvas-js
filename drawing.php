@@ -44,7 +44,10 @@
     </div>
 
 
-    
+    <?php
+
+
+?>
 
     <script src="scripts/script-drawing.js"></script>
 
