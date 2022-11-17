@@ -53,7 +53,7 @@ class Canvas {
     // offset każdego elementu aż do osiągnięcia końca
     // uruchamiana przy rozpoczęciu rysowania
     start(e) {
-        // console.log("Zaczynamy rysowanie");
+        console.log("Zaczynamy rysowanie");
 
         this.changeColor();
         this.changeThickness();
@@ -98,10 +98,16 @@ class Canvas {
                 this.context.stroke();
                 break;
             case '2': // rysowanie okręgów
-                this.context.moveTo(this.startX, this.startY + (this.position.y - this.startY) / 2);
-                this.context.bezierCurveTo(this.startX, this.startY, this.position.x, this.startY, this.position.x, this.startY + (this.position.y - this.startY) / 2);
-                this.context.bezierCurveTo(this.position.x, this.position.y, this.startX, this.position.y, this.startX, this.startY + (this.position.y - this.startY) / 2);
-                this.context.closePath();
+                // this.context.moveTo(this.startX, this.startY + (this.position.y - this.startY) / 2);
+                // this.context.bezierCurveTo(this.startX, this.startY, this.position.x, this.startY, this.position.x, this.startY + (this.position.y - this.startY) / 2);
+                // this.context.bezierCurveTo(this.position.x, this.position.y, this.startX, this.position.y, this.startX, this.startY + (this.position.y - this.startY) / 2);
+
+                // this.context.moveTo(this.startX, this.startY + (this.position.y - this.startY) / 2);
+                const radius = Math.sqrt((this.startX - (e.touches[0].pageX - this.canvas.offsetLeft)) * (this.startX - (e.touches[0].pageX - this.canvas.offsetLeft)) + (this.startY - (e.touches[0].pageY - this.canvas.offsetTop)) * (this.startY - (e.touches[0].pageY - this.canvas.offsetTop)))
+
+
+                this.context.arc(e.touches[0].pageX - this.canvas.offsetLeft, e.touches[0].pageY - this.canvas.offsetTop, radius, 0, Math.PI * 2);
+                // this.context.closePath();
                 break;
             case '3': // rysowanie linii
                 this.context.moveTo(this.startX, this.startY);
@@ -146,7 +152,10 @@ class Canvas {
 
     // próba zapisu do JSON
     saveToJSON() {
-        const jsonStr = JSON.stringify({ img: this.canvas.toDataURL() });
+        // ma nie byc tego tylko sama tablica krzywych
+        // const jsonStr = JSON.stringify({ img: this.canvas.toDataURL() });
+
+        const jsonStr = JSON.stringify({ url: this.curvesArray });
         console.log(jsonStr);
         this.sendJSON(jsonStr);
         return jsonStr;

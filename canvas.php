@@ -8,4 +8,6 @@
     $jsonData = json_encode($tempArray);
     file_put_contents('results.json', $jsonData);
 
+    
+
 ?>
