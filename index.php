@@ -7,6 +7,8 @@
     <link rel="icon" type="image/png" href="images/icon.png">
     <title>Edytor w canvas</title>
 
+    <script src="scripts/script-index.js"></script>
+
     <link rel="stylesheet" href="styles/styles-index.css">
 
 </head>
@@ -59,7 +61,7 @@
     ?>
 
 
-    <script src="scripts/script-index.js"></script>
+    
 
 </body>
 

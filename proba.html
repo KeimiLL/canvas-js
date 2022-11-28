@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<!-- urlpost.html -->
+
+<head>
+   <meta charset="utf-8">
+   <title>Przykład użycia technologii AJAX</title>
+</head>
+
+<body style='text-align:center'>
+   <h1>Wczytywanie strony internetowej do znacznika DIV</h1>
+   <div id='info'>To zdanie zostanie zamienione</div>
+   <script>
+
+      params = "url=amazon.com/gp/aw"
+      request = new ajaxRequest()
+      request.open("POST", "urlpost.php", true)
+      request.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+      request.setRequestHeader("Content-length", params.length)
+      request.setRequestHeader("Connection", "close")
+      request.onreadystatechange = function () {
+         if (this.readyState == 4) {
+            if (this.status == 200) {
+               if (this.responseText != null) {
+                  document.getElementById('info').innerHTML = this.responseText
+               }
+               else alert("Błąd Ajax: nie otrzymano danych")
+            }
+            else alert("Błąd Ajax: " + this.statusText)
+         }
+      }
+      request.send(params)
+      function ajaxRequest() {
+         try {
+            var request = new XMLHttpRequest()
+         }
+         catch (e1) {
+            try {
+               request = new ActiveXObject("Msxml2.XMLHTTP")
+            }
+            catch (e2) {
+               try {
+                  request = new ActiveXObject("Microsoft.XMLHTTP")
+               }
+               catch (e3) {
+                  request = false
+               }
+            }
+         }
+         return request
+      }
+      
+   </script>
+</body>
+
+</html>
