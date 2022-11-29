@@ -17,7 +17,7 @@
     </div>
 
     <div class="properties">
-        
+
         <div class="props">
             <div class="feature" id="div-slider">
                 <input id="slider" type="range" name="slider" min="1" max="20" step="1" value="5" />

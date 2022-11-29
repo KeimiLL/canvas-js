@@ -1,10 +1,9 @@
 
 class Canvas {
     constructor(canvas, context, color, thickness, radioBtns) {
-
-        // DODAĆ ID !!!!
-
         this.canvas = canvas;
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
         this.context = context;
         this.position = null;
 
@@ -13,8 +12,6 @@ class Canvas {
 
         this.radioBtns = radioBtns;
         this.radioValue = "1";
-
-        this.offs = null;
 
         this.changeCap();
         this.startX = null;
@@ -89,6 +86,7 @@ class Canvas {
     clearAll() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         // console.log("Zawartość wyczyszczona");
+        this.setDefaultObjects();
 
         this.curvesArray = [];
         this.idxCurvesArray = -1;
@@ -99,6 +97,7 @@ class Canvas {
     // offset każdego elementu aż do osiągnięcia końca
     // uruchamiana przy rozpoczęciu rysowania
     start(e) {
+        this.setDefaultObjects();
         console.log("Zaczynamy rysowanie");
         // e.preventDefault()
 
@@ -106,18 +105,22 @@ class Canvas {
         this.changeThickness();
         this.checkRadioShape();
 
-        this.getClientOffset(e.touches[0]);
 
         // dodane offsety żeby pole do rysowania mogło nie być tylko w lewym górnym rogu
 
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
                 this.context.beginPath();
+                this.getClientOffset(e.touches[0]);
                 // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
-                this.currCurve.color = this.color;
-                this.currCurve.thickness = this.thickness;
-                this.currCurve.points.push(this.currPoint);
-                this.context.fill();
+                this.currCurve.color = this.color.value;
+                this.currCurve.thickness = this.thickness.value;
+                const currPointCopy = { ...this.currPoint};
+                this.currCurve.points.push(currPointCopy);
+                console.log(this.currCurve);
+                // this.context.moveTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
+
+                // this.context.fill();
                 break;
             case '2': // rysowanie okręgów
                 this.startX = this.position.x;
@@ -136,18 +139,18 @@ class Canvas {
     // uruchamiana podczas rysowania
     move(e) {
         // console.log("Jesteśmy w trakcie rysoania");
-
         e.preventDefault();
         // this.context.beginPath();
-
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
-
-                this.context.moveTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
+                this.context.moveTo(this.currPoint.x, this.currPoint.y);
                 this.getClientOffset(e.touches[0]);
-                this.currCurve.points.push(this.currPoint);
-                this.context.lineTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
+                const currPointCopy = { ...this.currPoint};
+                this.currCurve.points.push(currPointCopy);
+                // this.context.lineTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
+                this.context.lineTo(this.currPoint.x, this.currPoint.y);
                 this.context.stroke();
+                
                 break;
             case '2': // rysowanie okręgów
                 // this.context.moveTo(this.startX, this.startY + (this.position.y - this.startY) / 2);
@@ -178,6 +181,7 @@ class Canvas {
                 // wysylac na serwer krzywą this.currCurve
                 // i najlepiej odswiezyc widok z jsona na serwerze na najnowszy
                 // this.mapCurve(this.currCurve);
+                console.log(this.currCurve);
                 break;
             case '2': // rysowanie okręgów
                 break;
@@ -187,12 +191,12 @@ class Canvas {
 
 
         // i na koniec po wysłaniu na serwer wyczyszczenie obiektów
-        this.setDefaultObjects();
+        // this.setDefaultObjects();
 
 
 
 
-        
+
         this.curvesArray.push(this.context.getImageData(0, 0, this.canvas.width, this.canvas.height));
         this.idxCurvesArray += 1;
     }
@@ -207,8 +211,8 @@ class Canvas {
         this.context.fillStyle = this.currCurve.color;
         this.context.lineWidth - this.currCurve.thickness;
         this.currCurve.points.forEach(point => {
-            context.lineTo(point.x*this.canvas.width, point.y*this.canvas.height);
-			context.stroke();
+            context.lineTo(point.x * this.canvas.width, point.y * this.canvas.height);
+            context.stroke();
         });
         this.context.closePath();
         this.context.fill();
@@ -283,10 +287,20 @@ class Canvas {
 
 
     //liczenie offsetów
+    // getClientOffset(e) {
+    //     const {pageX, pageY} = e.touches ? e.touches[0] : e;
+    //     this.currPoint.x = (pageX - this.canvas.offsetLeft) / this.canvas.width;
+    //     this.currPoint.y = (pageY - this.canvas.offsetTop) / this.canvas.height;
+    // }
+
     getClientOffset(e) {
-        const {pageX, pageY} = e.touches ? e.touches[0] : e;
-        this.currPoint.x = (pageX - this.canvas.offsetLeft) / this.canvas.width;
-        this.currPoint.y = (pageY - this.canvas.offsetTop) / this.canvas.height;
+        const rect = e.target.getBoundingClientRect();
+        const tempX = e.pageX - rect.left;
+        const tempY = e.pageY - rect.top;
+
+        this.currPoint.x = Math.round((tempX * e.target.width) / rect.width);
+        this.currPoint.y = Math.round((tempY * e.target.height) / rect.height);
+        console.log(this.currPoint);
     }
 
 }
