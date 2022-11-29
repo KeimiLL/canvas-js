@@ -24,16 +24,50 @@ class Canvas {
         this.curvesArray = [];
         this.idxCurvesArray = -1;
 
-        ///////////////////////// tablice na odpowiednie krzywe potrzebne do zapisu
-        this.currCurve = [];
-        this.currLine = [];
-        this.currCircle = [];
 
-        // pojedynczy punkt 
-        this.pointX = null;
-        this.pointY = null;
+        // pojedynczy punkt
+        this.currPoint = { x: 0, y: 0 };
 
+
+        ///////////////////////// obiekty na odpowiednie krzywe potrzebne do zapisu
+        this.currCurve = {};
+
+        this.currLine = {};
+
+        this.currCircle = {};
+        this.setDefaultObjects();
     }
+
+    //wyczyszczenie obiektow i domyslne ustawienie własności
+    setDefaultObjects() {
+        // pojedynczy punkt
+        this.currPoint = { x: 0, y: 0 };
+
+        // Krzywa
+        this.currCurve = {
+            color: "#fff",
+            thickness: 1,
+            points: []
+        };
+
+        // Linia prosta
+        this.currLine = {
+            color: "#fff",
+            thickness: 1,
+            startPoint: {}, // obiekty currPoint
+            stopPoint: {}// obiekty currPoint
+        };
+
+        // Okrąg
+        this.currCircle = {
+            color: "#fff",
+            thickness: 1,
+            startPoint: {},// obiekty currPoint
+            stopPoint: {},// obiekty currPoint
+            radius: 1
+        };
+    }
+
 
     // sprawdzenie i ustawienie rysowania konkretnego kształtu
     checkRadioShape() {
@@ -66,19 +100,23 @@ class Canvas {
     // uruchamiana przy rozpoczęciu rysowania
     start(e) {
         console.log("Zaczynamy rysowanie");
+        // e.preventDefault()
 
         this.changeColor();
         this.changeThickness();
         this.checkRadioShape();
 
-        this.position = this.getClientOffset(e.touches[0]);
+        this.getClientOffset(e.touches[0]);
 
         // dodane offsety żeby pole do rysowania mogło nie być tylko w lewym górnym rogu
 
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
                 this.context.beginPath();
-                this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
+                // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
+                this.currCurve.color = this.color;
+                this.currCurve.thickness = this.thickness;
+                this.currCurve.points.push(this.currPoint);
                 this.context.fill();
                 break;
             case '2': // rysowanie okręgów
@@ -100,13 +138,15 @@ class Canvas {
         // console.log("Jesteśmy w trakcie rysoania");
 
         e.preventDefault();
-        this.context.beginPath();
+        // this.context.beginPath();
 
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
 
-                this.context.moveTo(this.position.x, this.position.y);
-                this.context.lineTo(e.touches[0].pageX - this.canvas.offsetLeft, e.touches[0].pageY - this.canvas.offsetTop);
+                this.context.moveTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
+                this.getClientOffset(e.touches[0]);
+                this.currCurve.points.push(this.currPoint);
+                this.context.lineTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
                 this.context.stroke();
                 break;
             case '2': // rysowanie okręgów
@@ -126,21 +166,54 @@ class Canvas {
                 this.context.lineTo(e.touches[0].pageX - this.canvas.offsetLeft, e.touches[0].pageY - this.canvas.offsetTop);
                 break;
         }
-        this.position = { x: e.touches[0].pageX - this.canvas.offsetLeft, y: e.touches[0].pageY - this.canvas.offsetTop };
+        // this.position = { x: e.touches[0].pageX - this.canvas.offsetLeft, y: e.touches[0].pageY - this.canvas.offsetTop };
     }
 
     // uruchamiana przy zakończeniu rysowania
     stop(e) {
-        e.preventDefault();
-        // Zakonczenie rysowania
-        // dla linii i okręgów
-        if (this.radioValue.toString() === '2' || this.radioValue.toString() === '3')
-            this.context.stroke();
+        // e.preventDefault();
 
-        this.position = null;
+        switch (this.radioValue.toString()) {
+            case '1': // rysowanie swobodne
+                // wysylac na serwer krzywą this.currCurve
+                // i najlepiej odswiezyc widok z jsona na serwerze na najnowszy
+                // this.mapCurve(this.currCurve);
+                break;
+            case '2': // rysowanie okręgów
+                break;
+            case '3': // rysowanie linii
+                break;
+        }
+
+
+        // i na koniec po wysłaniu na serwer wyczyszczenie obiektów
+        this.setDefaultObjects();
+
+
+
+
+        
         this.curvesArray.push(this.context.getImageData(0, 0, this.canvas.width, this.canvas.height));
         this.idxCurvesArray += 1;
     }
+
+    //rysowanie krzywej z obiektu currCurve
+    mapCurve(curve) {
+        this.currCurve = curve;
+
+        this.context.beginPath();
+        // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
+        this.context.strokeStyle = this.currCurve.color;
+        this.context.fillStyle = this.currCurve.color;
+        this.context.lineWidth - this.currCurve.thickness;
+        this.currCurve.points.forEach(point => {
+            context.lineTo(point.x*this.canvas.width, point.y*this.canvas.height);
+			context.stroke();
+        });
+        this.context.closePath();
+        this.context.fill();
+    }
+
 
     // zmiana koloru
     changeColor() {
@@ -211,10 +284,9 @@ class Canvas {
 
     //liczenie offsetów
     getClientOffset(e) {
-        const x = pageX - this.canvas.offsetLeft;
-        const y = pageY - this.canvas.offsetTop;
-
-        return { x, y }
+        const {pageX, pageY} = e.touches ? e.touches[0] : e;
+        this.currPoint.x = (pageX - this.canvas.offsetLeft) / this.canvas.width;
+        this.currPoint.y = (pageY - this.canvas.offsetTop) / this.canvas.height;
     }
 
 }

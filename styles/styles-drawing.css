@@ -4,7 +4,23 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    font-size: 105%;
+}
+
+.main-div{
+    margin: 0.5rem 0;
+    width: 100%;
+    height: 70vh;
+    position: relative;
+    padding: 0.5rem;
+}
+
+canvas{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0; 
+    top: 0;
+    background-color: white;
 }
 
 .properties {
@@ -121,21 +137,21 @@ input[type="color"]::-webkit-color-swatch {
 
 
 
-.main-div {
+/* .main-div {
     padding-top: 4px;
     text-align: center;
-}
+} */
 
 .properties {
     margin: 10px auto;
     text-align: center;
 }
-
+/* 
 #canvas {
     background-color: white;
     height: 70vh;
     width: 97vw;
-}
+} */
 
 #div-shapes input {
     display: block;
