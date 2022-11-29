@@ -42,6 +42,7 @@ class Canvas {
 
         // Krzywa
         this.currCurve = {
+            type: "curve",
             color: "#fff",
             thickness: 1,
             points: []
@@ -49,6 +50,7 @@ class Canvas {
 
         // Linia prosta
         this.currLine = {
+            type: "line",
             color: "#fff",
             thickness: 1,
             startPoint: {}, // obiekty currPoint
@@ -57,6 +59,7 @@ class Canvas {
 
         // Okrąg
         this.currCircle = {
+            type: "circle",
             color: "#fff",
             thickness: 1,
             startPoint: {},// obiekty currPoint
@@ -115,7 +118,7 @@ class Canvas {
                 // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
                 this.currCurve.color = this.color.value;
                 this.currCurve.thickness = this.thickness.value;
-                const currPointCopy = { ...this.currPoint};
+                const currPointCopy = { ...this.currPoint };
                 this.currCurve.points.push(currPointCopy);
                 console.log(this.currCurve);
                 // this.context.moveTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
@@ -145,12 +148,12 @@ class Canvas {
             case '1': // rysowanie swobodne
                 this.context.moveTo(this.currPoint.x, this.currPoint.y);
                 this.getClientOffset(e.touches[0]);
-                const currPointCopy = { ...this.currPoint};
+                const currPointCopy = { ...this.currPoint };
                 this.currCurve.points.push(currPointCopy);
                 // this.context.lineTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
                 this.context.lineTo(this.currPoint.x, this.currPoint.y);
                 this.context.stroke();
-                
+
                 break;
             case '2': // rysowanie okręgów
                 // this.context.moveTo(this.startX, this.startY + (this.position.y - this.startY) / 2);
@@ -182,6 +185,7 @@ class Canvas {
                 // i najlepiej odswiezyc widok z jsona na serwerze na najnowszy
                 // this.mapCurve(this.currCurve);
                 console.log(this.currCurve);
+                this.saveToJSON(this.currCurve);
                 break;
             case '2': // rysowanie okręgów
                 break;
@@ -201,21 +205,33 @@ class Canvas {
         this.idxCurvesArray += 1;
     }
 
-    //rysowanie krzywej z obiektu currCurve
-    mapCurve(curve) {
-        this.currCurve = curve;
+    //odwzorowanie krzywej/linii/okręgu z PHP
+    mapElement(element) {
+        switch (element.type.toString()) {
+            case 'curve':
+                this.currCurve = element;
 
-        this.context.beginPath();
-        // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
-        this.context.strokeStyle = this.currCurve.color;
-        this.context.fillStyle = this.currCurve.color;
-        this.context.lineWidth - this.currCurve.thickness;
-        this.currCurve.points.forEach(point => {
-            context.lineTo(point.x * this.canvas.width, point.y * this.canvas.height);
-            context.stroke();
-        });
-        this.context.closePath();
-        this.context.fill();
+                this.context.beginPath();
+                this.context.strokeStyle = this.currCurve.color;
+                this.context.fillStyle = this.currCurve.color;
+                this.context.lineWidth - this.currCurve.thickness;
+                this.currCurve.points.forEach(point => {
+                    context.lineTo(point.x * this.canvas.width, point.y * this.canvas.height);
+                    context.stroke();
+                });
+                this.context.closePath();
+                this.context.fill();
+                break;
+            case 'line':
+                break;
+            case 'circle':
+                break;
+        }
+
+        // wyczyszczenie krzywych
+        this.setDefaultObjects();
+
+
     }
 
 
@@ -240,11 +256,11 @@ class Canvas {
     }
 
     // próba zapisu do JSON
-    saveToJSON() {
+    saveToJSON(element) {
         // ma nie byc tego tylko sama tablica krzywych
         // const jsonStr = JSON.stringify({ img: this.canvas.toDataURL() });
 
-        const jsonStr = JSON.stringify({ url: this.curvesArray });
+        const jsonStr = JSON.stringify(element);
         console.log(jsonStr);
         this.sendJSON(jsonStr);
         return jsonStr;
