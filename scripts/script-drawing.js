@@ -23,6 +23,16 @@ class Canvas {
         // potrzebne do undo()
         this.curvesArray = [];
         this.idxCurvesArray = -1;
+
+        ///////////////////////// tablice na odpowiednie krzywe potrzebne do zapisu
+        this.currCurve = [];
+        this.currLine = [];
+        this.currCircle = [];
+
+        // pojedynczy punkt 
+        this.pointX = null;
+        this.pointY = null;
+
     }
 
     // sprawdzenie i ustawienie rysowania konkretnego kształtu
@@ -33,6 +43,9 @@ class Canvas {
                 break;
             }
         }
+        // 1 - rysowanie swobodne
+        // 2 - rysowanie linii
+        // 3 - rysowanie okręgów
 
         console.log("Wybrana opcja: " + this.radioValue);
     }
@@ -58,11 +71,16 @@ class Canvas {
         this.changeThickness();
         this.checkRadioShape();
 
-        this.position = { x: e.touches[0].pageX - this.canvas.offsetLeft, y: e.touches[0].pageY - this.canvas.offsetTop };
+        this.position = this.getClientOffset(e.touches[0]);
 
         // dodane offsety żeby pole do rysowania mogło nie być tylko w lewym górnym rogu
 
         switch (this.radioValue.toString()) {
+            case '1': // rysowanie swobodne
+                this.context.beginPath();
+                this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
+                this.context.fill();
+                break;
             case '2': // rysowanie okręgów
                 this.startX = this.position.x;
                 this.startY = this.position.y;
@@ -73,11 +91,6 @@ class Canvas {
                 this.context.fill();
                 this.startX = this.position.x;
                 this.startY = this.position.y;
-                break;
-            default: // rysowanie linii i swobodne
-                this.context.beginPath();
-                this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
-                this.context.fill();
                 break;
         }
     }
@@ -191,6 +204,17 @@ class Canvas {
         this.idxCurvesArray -= 1;
         this.curvesArray.pop();
         this.context.putImageData(this.curvesArray[this.idxCurvesArray], 0, 0);
+    }
+
+
+
+
+    //liczenie offsetów
+    getClientOffset(e) {
+        const x = pageX - this.canvas.offsetLeft;
+        const y = pageY - this.canvas.offsetTop;
+
+        return { x, y }
     }
 
 }
