@@ -1,5 +1,5 @@
 * {
-    background-color: #da7f7f;
+    background-color: #f1a3a3;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
@@ -9,47 +9,50 @@
 
 .properties {
     display: flex;
-    border: 1px solid black;
     justify-content: space-around;
 }
 
 .props {
-    border: 1px solid black;
+    flex-grow: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 #div-shapes {
-    border: 1px solid black;
-    
+    flex-grow: 2;
 }
 
 .btns {
-    border: 1px solid black;
+    flex-grow: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-#clear-btn{
+#clear-btn {
     background-color: rgb(144, 255, 130);
 }
 
-#undo-btn{
+#undo-btn {
     background-color: rgb(234, 255, 113);
 }
 
-#save-btn{
+#save-btn {
     background-color: rgb(255, 210, 112);
 }
 
-#clear-btn, #undo-btn, #save-btn {
-    width: 60px;
-    height: 25px;
+#clear-btn,
+#undo-btn,
+#save-btn {
+    width: 90px;
+    height: 24px;
     font-size: 12px;
     font-weight: bold;
-    
+
     border: 2px solid #555;
 
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 #back-btn {
@@ -119,25 +122,20 @@ input[type="color"]::-webkit-color-swatch {
 
 
 .main-div {
-    padding-top: 20px;
-
+    padding-top: 4px;
     text-align: center;
 }
 
 .properties {
-    margin: 20px auto;
+    margin: 10px auto;
     text-align: center;
 }
 
-
 #canvas {
     background-color: white;
+    height: 70vh;
+    width: 97vw;
 }
-
-label {
-    padding-right: 5px;
-}
-
 
 #div-shapes input {
     display: block;
@@ -145,55 +143,10 @@ label {
 }
 
 #div-shapes label {
-    display:flex;
+    display: flex;
+    margin-bottom: 7px;
 }
 
-
-
-@media (orientation: landscape) {
-    body {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-    }
-
-    .main-div {
-        margin: 0;
-    }
-
-    .properties {
-        margin: 0;
-        /* margin-top: 80px; */
-        text-align: center;
-        min-width: 50px;
-    }
-
-    .feature {
-        margin: 0;
-        margin: 10px 0px;
-        padding: 0;
-    }
-
-    #clear-btn, #undo-btn {
-        margin: 10px 0px;
-        padding: 0;
-    }
-
-    #div-shapes {
-        display: flex;
-        margin-bottom: 10px;
-        padding: 0;
-        justify-content:space-between;
-        align-items: center;
-    }
-
-    #div-shapes label {
-        margin-right: 20px;
-    }
-
-    #div-shapes label:last-of-type {
-        margin-right: 0px;
-    }
+#div-shapes label:last-of-type {
+    margin-bottom: 0px;
 }

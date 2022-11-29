@@ -13,7 +13,7 @@
 
 <body>
     <div class="main-div">
-        <canvas id="canvas" width="280" height="280"></canvas>
+        <canvas id="canvas"></canvas>
     </div>
 
     <div class="properties">

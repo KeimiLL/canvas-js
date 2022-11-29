@@ -1,4 +1,3 @@
-let ID = 0;
 
 class Canvas {
     constructor(canvas, context, color, thickness, radioBtns) {
