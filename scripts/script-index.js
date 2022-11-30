@@ -7,11 +7,16 @@ const createBtn = document.querySelector('#create-btn');
 const drawings = [];
 
 window.onload = function () {
-    showDrawings();
+    getDrawings();
 };
 
 window.setInterval(showDrawings, 1000);
-function showDrawings() {
+
+
+// pobranie rysunkow i potem przekazanie ich do funkcji 
+// wyswietlajacej na glownym ekranie
+function getDrawings() {
+    const drawings = [];
     const xhr = new XMLHttpRequest();
 
     xhr.open("GET", "getJSON.php", true);
@@ -21,11 +26,15 @@ function showDrawings() {
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-                if (xhr.responseText != null) {
-                    console.log(xhr.responseText);
-
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                if (this.responseText != null) {
+                    console.log(this.responseText);
+                    const data = JSON.parse(this.responseText);
+                    data.forEach(drawing => {
+                        drawings.push(drawing);
+                    });
+                    showDrawings();
                 }
                 else console.log("Błąd Ajax: nie otrzymano danych")
             }
@@ -36,6 +45,14 @@ function showDrawings() {
     // wysyła żądanie na serwer
     xhr.send();
 }
+
+// wyswietlenie rysunkow na glownej
+function showDrawings() {
+    
+}
+
+
+
 
 createBtn.addEventListener('click', () => {
 

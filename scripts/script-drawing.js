@@ -281,10 +281,10 @@ class Canvas {
         xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    if (xhr.responseText != null) {
-                        console.log(xhr.responseText);
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    if (this.responseText != null) {
+                        console.log(this.responseText);
                     }
                     else console.log("Błąd: nie otrzymano danych")
                 }
