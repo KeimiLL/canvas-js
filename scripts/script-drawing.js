@@ -1,4 +1,3 @@
-
 class Canvas {
     constructor(canvas, context, color, thickness, radioBtns) {
         this.canvas = canvas;
@@ -24,7 +23,7 @@ class Canvas {
         // pojedynczy punkt
         this.currPoint = { x: 0, y: 0 };
 
-        ///////////////////////// obiekty na odpowiednie krzywe potrzebne do zapisu
+        // obiekty na odpowiednie krzywe potrzebne do zapisu i odczytu z pliku
         this.currCurve = {};
 
         this.currLine = {};
@@ -65,7 +64,6 @@ class Canvas {
         };
     }
 
-
     // sprawdzenie i ustawienie rysowania konkretnego kształtu
     checkRadioShape() {
         for (const radioBtn of this.radioBtns) {
@@ -79,7 +77,6 @@ class Canvas {
         // 3 - rysowanie linii
         console.log("Wybrana opcja: " + this.radioValue);
     }
-
 
     // czyści całą ramkę
     clearAll() {
@@ -177,16 +174,18 @@ class Canvas {
                 // i najlepiej odswiezyc widok z jsona na serwerze na najnowszy
                 // this.mapCurve(this.currCurve);
                 console.log(this.currCurve);
-                this.saveToJSON(this.currCurve);
+                this.elementToJSON(this.currCurve);
                 break;
             case '2': // rysowanie okręgów
                 console.log(this.currCircle);
                 context.stroke();
+                this.elementToJSON(this.currCircle);
                 break;
             case '3': // rysowanie linii
                 console.log(this.currLine);
                 this.context.lineTo(this.currPoint.x, this.currPoint.y);
                 context.stroke();
+                this.elementToJSON(this.currLine);
                 break;
         }
 
@@ -255,7 +254,7 @@ class Canvas {
     }
 
     // próba zapisu do JSON
-    saveToJSON(element) {
+    elementToJSON(element) {
         const jsonStr = JSON.stringify(element);
         console.log(jsonStr);
         this.sendJSON(jsonStr);
@@ -281,6 +280,18 @@ class Canvas {
         // podaję nazwę nagłówka i wartość do ustawienia jako treść tego nagłówka
         xhr.setRequestHeader("Content-Type", "application/json");
 
+        request.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    if (xhr.responseText != null) {
+                        console.log(xhr.responseText);
+                    }
+                    else console.log("Błąd Ajax: nie otrzymano danych")
+                }
+                else console.log("Błąd Ajax: " + this.statusText)
+            }
+
+        }
         // wysyła żądanie na serwer
         xhr.send(jsonStr);
     }
@@ -297,16 +308,7 @@ class Canvas {
         this.context.putImageData(this.curvesArray[this.idxCurvesArray], 0, 0);
     }
 
-
-
-
-    //liczenie offsetów
-    // getOffset(e) {
-    //     const {pageX, pageY} = e.touches ? e.touches[0] : e;
-    //     this.currPoint.x = (pageX - this.canvas.offsetLeft) / this.canvas.width;
-    //     this.currPoint.y = (pageY - this.canvas.offsetTop) / this.canvas.height;
-    // }
-
+    // liczenie offsetów
     getOffset(e) {
         const rect = e.target.getBoundingClientRect();
         const tempX = e.pageX - rect.left;
@@ -315,7 +317,6 @@ class Canvas {
         this.currPoint.x = Math.round((tempX * e.target.width) / rect.width);
         this.currPoint.y = Math.round((tempY * e.target.height) / rect.height);
     }
-
 }
 
 
@@ -370,9 +371,8 @@ canvas.addEventListener('touchmove', (e) => {
     myCanvas.move(e)
 })
 
-
 // przycisk do testowania zapisu do JSON
 const saveBtn = document.querySelector('#save-btn');
 saveBtn.addEventListener('click', () => {
-    myCanvas.saveToJSON();
+    myCanvas.elementToJSON();
 })
