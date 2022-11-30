@@ -2,8 +2,10 @@
 class Canvas {
     constructor(canvas, context, color, thickness, radioBtns) {
         this.canvas = canvas;
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        // this.canvas.width = window.innerWidth;
+        // this.canvas.height = window.innerHeight;
+        this.canvas.width = this.canvas.offsetWidth;
+        this.canvas.height = this.canvas.offsetHeight;
         this.context = context;
         this.position = null;
 
@@ -45,7 +47,7 @@ class Canvas {
             type: "curve",
             color: "#fff",
             thickness: 1,
-            points: []
+            points: [] // tablica obiektów currPoint
         };
 
         // Okrąg
@@ -55,7 +57,6 @@ class Canvas {
             thickness: 1,
             startPoint: {},// obiekty currPoint
             stopPoint: {},// obiekty currPoint
-            radius: 1
         };
 
         // Linia prosta
@@ -120,8 +121,8 @@ class Canvas {
                 // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
                 this.currCurve.color = this.color.value;
                 this.currCurve.thickness = this.thickness.value;
-                const currPointCopy = { ...this.currPoint };
-                this.currCurve.points.push(currPointCopy);
+                const currPoint1Copy = { ...this.currPoint };
+                this.currCurve.points.push(currPoint1Copy);
                 console.log(this.currCurve);
                 // this.context.moveTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
 
@@ -129,9 +130,11 @@ class Canvas {
                 break;
             case '2': // rysowanie okręgów
                 this.getOffset(e.touches[0]);
+                this.currCircle.color = this.color.value;
+                this.currCircle.thickness = this.thickness.value;
                 this.startX = this.currPoint.x;
                 this.startY = this.currPoint.y;
-                console.log("startX: " + this.startX + ", startY: " + this.startY);
+                this.currCircle.startPoint = { ...this.currPoint };
                 break;
             case '3': // rysowanie linii
                 this.context.beginPath();
@@ -152,26 +155,21 @@ class Canvas {
             case '1': // rysowanie swobodne
                 this.context.moveTo(this.currPoint.x, this.currPoint.y);
                 this.getOffset(e.touches[0]);
-                const currPointCopy = { ...this.currPoint };
-                this.currCurve.points.push(currPointCopy);
+                const currPoint1Copy = { ...this.currPoint };
+                this.currCurve.points.push(currPoint1Copy);
                 // this.context.lineTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
                 this.context.lineTo(this.currPoint.x, this.currPoint.y);
                 this.context.stroke();
 
                 break;
             case '2': // rysowanie okręgów
-                // this.context.moveTo(this.startX, this.startY + (this.position.y - this.startY) / 2);
-                // this.context.bezierCurveTo(this.startX, this.startY, this.position.x, this.startY, this.position.x, this.startY + (this.position.y - this.startY) / 2);
-                // this.context.bezierCurveTo(this.position.x, this.position.y, this.startX, this.position.y, this.startX, this.startY + (this.position.y - this.startY) / 2);
-
-                // this.context.moveTo(this.startX, this.startY + (this.position.y - this.startY) / 2);
-
-
-
+                this.context.beginPath();
                 this.getOffset(e.touches[0]);
 
-                const radius = Math.sqrt((this.startX - this.currPoint.x) * (this.startX - this.currPoint.x) + (this.startY - this.currPoint.y) * (this.startY - this.currPoint.y))/ 2;
-
+                const currPoint2Copy = { ...this.currPoint };
+                this.currCircle.stopPoint = currPoint2Copy;
+                
+                const radius = Math.sqrt((this.startX - this.currPoint.x) * (this.startX - this.currPoint.x) + (this.startY - this.currPoint.y) * (this.startY - this.currPoint.y));
 
                 this.context.arc(this.currPoint.x, this.currPoint.y, radius, 0, Math.PI * 2);
                 // this.context.closePath();
@@ -181,7 +179,6 @@ class Canvas {
                 this.context.lineTo(e.touches[0].pageX - this.canvas.offsetLeft, e.touches[0].pageY - this.canvas.offsetTop);
                 break;
         }
-        // this.position = { x: e.touches[0].pageX - this.canvas.offsetLeft, y: e.touches[0].pageY - this.canvas.offsetTop };
     }
 
     // uruchamiana przy zakończeniu rysowania
@@ -197,8 +194,7 @@ class Canvas {
                 this.saveToJSON(this.currCurve);
                 break;
             case '2': // rysowanie okręgów
-                console.log("startX: " + this.startX + ", startY: " + this.startY);
-                console.log("currPointX: " + this.currPoint.x + ", currPointY: " + this.currPoint.y);
+                console.log(this.currCircle);
                 context.stroke();
                 break;
             case '3': // rysowanie linii
