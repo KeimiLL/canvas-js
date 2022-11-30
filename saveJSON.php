@@ -28,11 +28,6 @@ if ($oldData == null) {
 }
 
 
-
-
 $newData = file_get_contents("php://input");
-
-
-
 
 var_dump($newData);

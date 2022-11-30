@@ -280,15 +280,15 @@ class Canvas {
         // podaję nazwę nagłówka i wartość do ustawienia jako treść tego nagłówka
         xhr.setRequestHeader("Content-Type", "application/json");
 
-        request.onreadystatechange = function () {
+        xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
                     if (xhr.responseText != null) {
                         console.log(xhr.responseText);
                     }
-                    else console.log("Błąd Ajax: nie otrzymano danych")
+                    else console.log("Błąd: nie otrzymano danych")
                 }
-                else console.log("Błąd Ajax: " + this.statusText)
+                else console.log("Błąd: " + this.statusText)
             }
 
         }
