@@ -103,6 +103,7 @@ class Canvas {
     // offset każdego elementu aż do osiągnięcia końca
     // uruchamiana przy rozpoczęciu rysowania
     start(e) {
+        e.preventDefault();
         this.setDefaultObjects();
         console.log("Zaczynamy rysowanie");
         // e.preventDefault()
@@ -138,10 +139,13 @@ class Canvas {
                 break;
             case '3': // rysowanie linii
                 this.context.beginPath();
-                this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
-                this.context.fill();
-                this.startX = this.position.x;
-                this.startY = this.position.y;
+                // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
+                this.getOffset(e.touches[0]);
+                this.currLine.color = this.color.value;
+                this.currLine.thickness = this.thickness.value;
+                this.startX = this.currPoint.x;
+                this.startY = this.currPoint.y;
+                this.currLine.startPoint = { ...this.currPoint };
                 break;
         }
     }
@@ -176,14 +180,16 @@ class Canvas {
                 break;
             case '3': // rysowanie linii
                 this.context.moveTo(this.startX, this.startY);
-                this.context.lineTo(e.touches[0].pageX - this.canvas.offsetLeft, e.touches[0].pageY - this.canvas.offsetTop);
+                this.getOffset(e.touches[0]);
+                this.currLine.stopPoint = { ...this.currPoint };
+                // this.context.lineTo(this.currPoint.x, this.currPoint.y);
                 break;
         }
     }
 
     // uruchamiana przy zakończeniu rysowania
     stop(e) {
-        // e.preventDefault();
+        e.preventDefault();
 
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
@@ -198,6 +204,9 @@ class Canvas {
                 context.stroke();
                 break;
             case '3': // rysowanie linii
+            console.log(this.currLine);
+                this.context.lineTo(this.currPoint.x, this.currPoint.y);
+                context.stroke();
                 break;
         }
 
