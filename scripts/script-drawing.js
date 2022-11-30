@@ -7,8 +7,6 @@ class Canvas {
         this.canvas.width = this.canvas.offsetWidth;
         this.canvas.height = this.canvas.offsetHeight;
         this.context = context;
-        this.position = null;
-
         this.color = color;
         this.thickness = thickness;
 
@@ -23,10 +21,8 @@ class Canvas {
         this.curvesArray = [];
         this.idxCurvesArray = -1;
 
-
         // pojedynczy punkt
         this.currPoint = { x: 0, y: 0 };
-
 
         ///////////////////////// obiekty na odpowiednie krzywe potrzebne do zapisu
         this.currCurve = {};
@@ -67,8 +63,6 @@ class Canvas {
             startPoint: {}, // obiekty currPoint
             stopPoint: {}// obiekty currPoint
         };
-
-
     }
 
 
@@ -83,7 +77,6 @@ class Canvas {
         // 1 - rysowanie swobodne
         // 2 - rysowanie okregow
         // 3 - rysowanie linii
-
         console.log("Wybrana opcja: " + this.radioValue);
     }
 
@@ -91,22 +84,16 @@ class Canvas {
     // czyści całą ramkę
     clearAll() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        // console.log("Zawartość wyczyszczona");
         this.setDefaultObjects();
 
         this.curvesArray = [];
         this.idxCurvesArray = -1;
     }
 
-    // żeby element nie musiał być w lewym górnym rogu, to licze offsety
-    // zaczynam od danego elementu i przechodzę przez DOM wliczając 
-    // offset każdego elementu aż do osiągnięcia końca
-    // uruchamiana przy rozpoczęciu rysowania
+    // zaczynamy rysowanie
     start(e) {
         e.preventDefault();
         this.setDefaultObjects();
-        console.log("Zaczynamy rysowanie");
-        // e.preventDefault()
 
         this.changeColor();
         this.changeThickness();
@@ -114,7 +101,6 @@ class Canvas {
 
 
         // dodane offsety żeby pole do rysowania mogło nie być tylko w lewym górnym rogu
-
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
                 this.context.beginPath();
@@ -125,9 +111,6 @@ class Canvas {
                 const currPoint1Copy = { ...this.currPoint };
                 this.currCurve.points.push(currPoint1Copy);
                 console.log(this.currCurve);
-                // this.context.moveTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
-
-                // this.context.fill();
                 break;
             case '2': // rysowanie okręgów
                 this.getOffset(e.touches[0]);
@@ -154,14 +137,12 @@ class Canvas {
     move(e) {
         // console.log("Jesteśmy w trakcie rysoania");
         e.preventDefault();
-        // this.context.beginPath();
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
                 this.context.moveTo(this.currPoint.x, this.currPoint.y);
                 this.getOffset(e.touches[0]);
                 const currPoint1Copy = { ...this.currPoint };
                 this.currCurve.points.push(currPoint1Copy);
-                // this.context.lineTo(this.currPoint.x * this.canvas.width, this.currPoint.y * this.canvas.height);
                 this.context.lineTo(this.currPoint.x, this.currPoint.y);
                 this.context.stroke();
 
@@ -172,11 +153,10 @@ class Canvas {
 
                 const currPoint2Copy = { ...this.currPoint };
                 this.currCircle.stopPoint = currPoint2Copy;
-                
+
                 const radius = Math.sqrt((this.startX - this.currPoint.x) * (this.startX - this.currPoint.x) + (this.startY - this.currPoint.y) * (this.startY - this.currPoint.y));
 
                 this.context.arc(this.currPoint.x, this.currPoint.y, radius, 0, Math.PI * 2);
-                // this.context.closePath();
                 break;
             case '3': // rysowanie linii
                 this.context.moveTo(this.startX, this.startY);
@@ -204,51 +184,53 @@ class Canvas {
                 context.stroke();
                 break;
             case '3': // rysowanie linii
-            console.log(this.currLine);
+                console.log(this.currLine);
                 this.context.lineTo(this.currPoint.x, this.currPoint.y);
                 context.stroke();
                 break;
         }
 
-
         // i na koniec po wysłaniu na serwer wyczyszczenie obiektów
         // this.setDefaultObjects();
-
-
-
-
-
         this.curvesArray.push(this.context.getImageData(0, 0, this.canvas.width, this.canvas.height));
         this.idxCurvesArray += 1;
     }
 
     //odwzorowanie krzywej/linii/okręgu z PHP
     mapElement(element) {
+        // chyba trzeba bedzie to jakos jeszcze przeskalowac przy mapowaniu
+        this.context.beginPath();
+        this.context.strokeStyle = this.currCurve.color;
+        this.context.fillStyle = this.currCurve.color;
+        this.context.lineWidth - this.currCurve.thickness;
+
         switch (element.type.toString()) {
             case 'curve':
                 this.currCurve = element;
 
-                this.context.beginPath();
-                this.context.strokeStyle = this.currCurve.color;
-                this.context.fillStyle = this.currCurve.color;
-                this.context.lineWidth - this.currCurve.thickness;
                 this.currCurve.points.forEach(point => {
-                    context.lineTo(point.x * this.canvas.width, point.y * this.canvas.height);
-                    context.stroke();
+                    this.canvas.moveTo(this.currCurve.startPoint.x, this.currCurve.startPoint.y);
+                    this.context.lineTo(point.x * this.canvas.width, point.y * this.canvas.height); // chyba do poprawy
+                    this.context.stroke();
                 });
                 this.context.closePath();
                 this.context.fill();
                 break;
-            case 'line':
-                break;
             case 'circle':
+                this.currCircle = element;
+                const radius = Math.sqrt((this.currCircle.startPoint.x - this.currCircle.stopPoint.x) * (this.currCircle.startPoint.x - this.currCircle.stopPoint.x) + (this.currCircle.startPoint.y - this.currCircle.stopPoint.y) * (this.currCircle.startPoint.y - this.currCircle.stopPoint.y));
+                this.context.arc(this.currCircle.startPoint.x, this.currCircle.startPoint.y, radius, 0, Math.PI * 2);
+                context.stroke();
+                break;
+            case 'line':
+                this.currLine = element;
+                this.canvas.moveTo(this.currCurve.startPoint.x, this.currCurve.startPoint.y);
+                this.context.lineTo(this.currCurve.stopPoint.x, this.currCurve.stopPoint.y);
+                context.stroke();
                 break;
         }
-
         // wyczyszczenie krzywych
         this.setDefaultObjects();
-
-
     }
 
 
@@ -274,9 +256,6 @@ class Canvas {
 
     // próba zapisu do JSON
     saveToJSON(element) {
-        // ma nie byc tego tylko sama tablica krzywych
-        // const jsonStr = JSON.stringify({ img: this.canvas.toDataURL() });
-
         const jsonStr = JSON.stringify(element);
         console.log(jsonStr);
         this.sendJSON(jsonStr);
@@ -294,7 +273,9 @@ class Canvas {
         // open() inicjuje żądanie
         // najpierw metoda, czyli POST 
         // potem URL do którego ma zostać wysłane żądanie (request)
-        xhr.open("POST", "canvas.php", false);
+        // true wskazuje na tryb asynchroniczny
+        // --------------------------------------------- dodac ID do url zeby php mial jakis identyfikator!!!!!
+        xhr.open("POST", "saveJSON.php", true);
 
         // ustawia wartość nagłówka żądania HTTP
         // podaję nazwę nagłówka i wartość do ustawienia jako treść tego nagłówka

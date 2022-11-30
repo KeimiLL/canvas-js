@@ -13,6 +13,7 @@
 
     // najpierw zrobie tylko zapis dla jednego ale musze dodac zapis ale i dopisywanie (write i append)
     // write json data
+    
     $oldData = file_get_contents("json_data/data.json");
     var_dump($oldData);
     $newData = file_get_contents("php://input");
