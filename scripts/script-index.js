@@ -4,6 +4,7 @@
 const id = 0;
 const pathJSON = "json_data/data.json";
 const createBtn = document.querySelector('#create-btn');
+const divDrawings = document.querySelector('.div-drawings');
 const drawings = [];
 
 window.onload = function () {
@@ -48,7 +49,21 @@ function getDrawings() {
 
 // wyswietlenie rysunkow na glownej
 function showDrawings() {
-    
+    //usuwam wszystkie poprzednie podglądy
+    while (divDrawings.firstChild) {
+        divDrawings.removeChild(divDrawings.firstChild);
+    }
+
+    // wyswietlam nowe podglady
+    drawings.forEach((drawing, idx) => {
+        const newDrawingBtn = document.createElement('button');
+        newDrawingBtn.innerText = "Rysunek " + (idx + 1);
+        newDrawingBtn.addEventListener('click', () => {
+            console.log("Kliknięto: Rysunek " + (idx + 1));
+        });
+        divDrawings.appendChild(newDrawingBtn);
+
+    });
 }
 
 
