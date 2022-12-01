@@ -37,23 +37,6 @@ function getDrawings() {
                     drawings.push(data);
                     console.log(drawings);
                     showDrawings(drawings);
-
-                    // Object.entries(data).forEach((entry) => {
-                    //     const [key, value] = entry;
-                    //     console.log(`${key}: ${value}`);
-
-
-                    //     entry.forEach(drawing => {
-                    //         drawings.push(drawing)
-                    //     });
-                    //     showDrawings();
-                    // });
-
-
-                    // data.forEach(drawing => {
-                    //     drawings.push(drawing)
-                    // });
-                    // showDrawings();
                 }
                 else console.log("Błąd Ajax: nie otrzymano danych")
             }
@@ -84,6 +67,7 @@ function showDrawings(drawings) {
         newDrawingBtn.setAttribute('class','btn-drawing');
         newDrawingBtn.addEventListener('click', () => {
             console.log("Kliknięto: Rysunek id = " + idx);
+            window.open("drawing.php", "_self"); // dodac do URL index zeby potem otworzyc odp rysunek!!!!
         });
         divDrawings.appendChild(newDrawingBtn);
     });
