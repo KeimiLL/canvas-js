@@ -61,7 +61,7 @@ function showDrawings(drawings) {
     drawings.forEach((drawing, idx) => {
         const newDrawingBtn = document.createElement('button');
         newDrawingBtn.innerText = "Rysunek id = " + idx;
-        newDrawingBtn.setAttribute('id','idx');
+        newDrawingBtn.setAttribute('id',idx);
         newDrawingBtn.setAttribute('class','btn-drawing');
         newDrawingBtn.addEventListener('click', () => {
             // console.log("Kliknięto: Rysunek id = " + idx);
@@ -72,9 +72,7 @@ function showDrawings(drawings) {
 }
 
 
-
-
-// createBtn.addEventListener('click', () => {
-
-// })
+createBtn.addEventListener('click', () => {
+    window.open("drawing.php?id=" + drawings.length - 1, "_self");
+})
 
