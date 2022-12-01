@@ -8,10 +8,11 @@ const divDrawings = document.querySelector('.div-drawings');
 const drawings = [];
 
 window.onload = function () {
+
     getDrawings();
 };
 
-window.setInterval(showDrawings, 1000);
+// window.setInterval(getDrawings, 1000);
 
 
 // pobranie rysunkow i potem przekazanie ich do funkcji 
@@ -32,10 +33,27 @@ function getDrawings() {
                 if (this.responseText != null) {
                     console.log(this.responseText);
                     const data = JSON.parse(this.responseText);
-                    data.forEach(drawing => {
-                        drawings.push(drawing);
-                    });
-                    showDrawings();
+                    console.log(data);
+                    drawings.push(data);
+                    console.log(drawings);
+                    showDrawings(drawings);
+
+                    // Object.entries(data).forEach((entry) => {
+                    //     const [key, value] = entry;
+                    //     console.log(`${key}: ${value}`);
+
+
+                    //     entry.forEach(drawing => {
+                    //         drawings.push(drawing)
+                    //     });
+                    //     showDrawings();
+                    // });
+
+
+                    // data.forEach(drawing => {
+                    //     drawings.push(drawing)
+                    // });
+                    // showDrawings();
                 }
                 else console.log("Błąd Ajax: nie otrzymano danych")
             }
@@ -48,28 +66,33 @@ function getDrawings() {
 }
 
 // wyswietlenie rysunkow na glownej
-function showDrawings() {
+function showDrawings(drawings) {
     //usuwam wszystkie poprzednie podglądy
     while (divDrawings.firstChild) {
         divDrawings.removeChild(divDrawings.firstChild);
     }
 
+    // narazie jest tylko 1 krzywa w drawings 
+    // potem dodać tak zeby bylo [dane_id: [krzywa1, krzyw2, krzywa3], dane_id2: [krzywa1, krzywa2, krzywa3]]
+    
     // wyswietlam nowe podglady
     drawings.forEach((drawing, idx) => {
+        console.log(idx);
         const newDrawingBtn = document.createElement('button');
-        newDrawingBtn.innerText = "Rysunek " + (idx + 1);
+        newDrawingBtn.innerText = "Rysunek id = " + idx;
+        newDrawingBtn.setAttribute('id','idx');
+        newDrawingBtn.setAttribute('class','btn-drawing');
         newDrawingBtn.addEventListener('click', () => {
-            console.log("Kliknięto: Rysunek " + (idx + 1));
+            console.log("Kliknięto: Rysunek id = " + idx);
         });
         divDrawings.appendChild(newDrawingBtn);
-
     });
 }
 
 
 
 
-createBtn.addEventListener('click', () => {
+// createBtn.addEventListener('click', () => {
 
-})
+// })
 

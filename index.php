@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="images/icon.png">
     <title>Edytor w canvas</title>
 
-    <script src="scripts/script-index.js"></script>
+    
 
     <link rel="stylesheet" href="styles/styles-index.css">
 
@@ -16,15 +16,18 @@
 <body>
 
     <div class="main-div">
-        
+
 
         <button id="create-btn" onclick="window.location.href='drawing.php';">Stwórz nowy</button>
-        
+
         <p>lub edytuj istniejące</p>
-        
-        <div class="div-drawings"></div>
-    </div>    
+
+        <div class="div-drawings">
+            <button class="btn-drawing">btn1</button>
+        </div>
+    </div>
 
 </body>
+<script src="scripts/script-index.js" defer></script>
 
 </html>

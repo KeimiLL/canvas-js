@@ -1,5 +1,5 @@
 * {
-    background-color: #374fd8;
+    background-color: #eeb882;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
@@ -19,11 +19,21 @@ body {
     margin: 10px auto;
 }
 
-#create-btn {
-    width: 130px;
-    height: 35px;
-    font-size: 17px;
-    background-color: rgb(190, 155, 212);
+.div-drawings button {
+    width: 220px;
+    height: 55px;
+    font-size: 20px;
+    background-color: rgb(236, 139, 152);
     border: 2px solid #555;
     margin: 10px auto;
 }
+
+#create-btn {
+    width: 220px;
+    height: 55px;
+    font-size: 20px;
+    background-color: rgb(199, 139, 236);
+    border: 2px solid #555;
+    margin: 10px auto;
+}
+
