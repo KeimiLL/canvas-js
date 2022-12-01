@@ -1,3 +1,5 @@
+const drawings = [];
+
 class Canvas {
     constructor(canvas, context, color, thickness, radioBtns) {
         this.canvas = canvas;
@@ -29,6 +31,86 @@ class Canvas {
         this.currLine = {};
 
         this.currCircle = {};
+        this.setDefaultObjects();
+
+
+        this.canvasID = 0;
+    }
+
+    // załadowanie krzywej o odp indeksie z php
+    loadCurves() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "getJSON.php?id=" + this.canvasID.toString(), true);
+
+        // ustawia wartość nagłówka żądania HTTP
+        // podaję nazwę nagłówka i wartość do ustawienia jako treść tego nagłówka
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    if (this.responseText != null) {
+                        console.log(this.responseText);
+                        const data = JSON.parse(this.responseText);
+                        console.log(data);
+                        drawings.push(data);
+                        console.log(drawings);
+                        showDrawings(drawings);
+                    }
+                    else console.log("Błąd Ajax: nie otrzymano danych")
+                }
+                else console.log("Błąd Ajax: " + this.statusText)
+            }
+
+        }
+        // wysyła żądanie na serwer
+        xhr.send();
+    }
+
+    mapCanvas(oneCanvas)
+
+    //odwzorowanie krzywej/linii/okręgu z PHP
+    mapElement(element) {
+        // chyba trzeba bedzie to jakos jeszcze przeskalowac przy mapowaniu
+        this.context.beginPath();
+
+        switch (element.type.toString()) {
+            case 'curve':
+                this.currCurve = element;
+                this.context.strokeStyle = this.currCurve.color;
+                this.context.fillStyle = this.currCurve.color;
+                this.context.lineWidth - this.currCurve.thickness;
+
+                this.currCurve.points.forEach(point => {
+                    this.canvas.moveTo(this.currCurve.startPoint.x, this.currCurve.startPoint.y);
+                    this.context.lineTo(point.x * this.canvas.width, point.y * this.canvas.height); // chyba do poprawy
+                    this.context.stroke();
+                });
+                this.context.closePath();
+                this.context.fill();
+                break;
+            case 'circle':
+                this.currCircle = element;
+                this.context.strokeStyle = this.currCircle.color;
+                this.context.fillStyle = this.currCircle.color;
+                this.context.lineWidth - this.currCircle.thickness;
+
+                const radius = Math.sqrt((this.currCircle.startPoint.x - this.currCircle.stopPoint.x) * (this.currCircle.startPoint.x - this.currCircle.stopPoint.x) + (this.currCircle.startPoint.y - this.currCircle.stopPoint.y) * (this.currCircle.startPoint.y - this.currCircle.stopPoint.y));
+                this.context.arc(this.currCircle.startPoint.x, this.currCircle.startPoint.y, radius, 0, Math.PI * 2);
+                context.stroke();
+                break;
+            case 'line':
+                this.currLine = element;
+                this.context.strokeStyle = this.currLine.color;
+                this.context.fillStyle = this.currLine.color;
+                this.context.lineWidth - this.currLine.thickness;
+
+                this.canvas.moveTo(this.currLine.startPoint.x, this.currLine.startPoint.y);
+                this.context.lineTo(this.currLine.stopPoint.x, this.currLine.stopPoint.y);
+                context.stroke();
+                break;
+        }
+        // wyczyszczenie krzywych
         this.setDefaultObjects();
     }
 
@@ -194,44 +276,6 @@ class Canvas {
         this.curvesArray.push(this.context.getImageData(0, 0, this.canvas.width, this.canvas.height));
         this.idxCurvesArray += 1;
     }
-
-    //odwzorowanie krzywej/linii/okręgu z PHP
-    mapElement(element) {
-        // chyba trzeba bedzie to jakos jeszcze przeskalowac przy mapowaniu
-        this.context.beginPath();
-        this.context.strokeStyle = this.currCurve.color;
-        this.context.fillStyle = this.currCurve.color;
-        this.context.lineWidth - this.currCurve.thickness;
-
-        switch (element.type.toString()) {
-            case 'curve':
-                this.currCurve = element;
-
-                this.currCurve.points.forEach(point => {
-                    this.canvas.moveTo(this.currCurve.startPoint.x, this.currCurve.startPoint.y);
-                    this.context.lineTo(point.x * this.canvas.width, point.y * this.canvas.height); // chyba do poprawy
-                    this.context.stroke();
-                });
-                this.context.closePath();
-                this.context.fill();
-                break;
-            case 'circle':
-                this.currCircle = element;
-                const radius = Math.sqrt((this.currCircle.startPoint.x - this.currCircle.stopPoint.x) * (this.currCircle.startPoint.x - this.currCircle.stopPoint.x) + (this.currCircle.startPoint.y - this.currCircle.stopPoint.y) * (this.currCircle.startPoint.y - this.currCircle.stopPoint.y));
-                this.context.arc(this.currCircle.startPoint.x, this.currCircle.startPoint.y, radius, 0, Math.PI * 2);
-                context.stroke();
-                break;
-            case 'line':
-                this.currLine = element;
-                this.canvas.moveTo(this.currCurve.startPoint.x, this.currCurve.startPoint.y);
-                this.context.lineTo(this.currCurve.stopPoint.x, this.currCurve.stopPoint.y);
-                context.stroke();
-                break;
-        }
-        // wyczyszczenie krzywych
-        this.setDefaultObjects();
-    }
-
 
     // zmiana koloru
     changeColor() {

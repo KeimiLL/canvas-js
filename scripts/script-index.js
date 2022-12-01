@@ -18,7 +18,6 @@ window.onload = function () {
 // pobranie rysunkow i potem przekazanie ich do funkcji 
 // wyswietlajacej na glownym ekranie
 function getDrawings() {
-    const drawings = [];
     const xhr = new XMLHttpRequest();
 
     xhr.open("GET", "getJSON.php", true);
