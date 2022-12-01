@@ -34,7 +34,7 @@ function getDrawings() {
                     const data = JSON.parse(this.responseText);
                     console.log(data);
                     drawings.push(data);
-                    console.log(drawings);
+                    // console.log(drawings);
                     showDrawings(drawings);
                 }
                 else console.log("Błąd Ajax: nie otrzymano danych")
@@ -59,14 +59,13 @@ function showDrawings(drawings) {
     
     // wyswietlam nowe podglady
     drawings.forEach((drawing, idx) => {
-        console.log(idx);
         const newDrawingBtn = document.createElement('button');
         newDrawingBtn.innerText = "Rysunek id = " + idx;
         newDrawingBtn.setAttribute('id','idx');
         newDrawingBtn.setAttribute('class','btn-drawing');
         newDrawingBtn.addEventListener('click', () => {
-            console.log("Kliknięto: Rysunek id = " + idx);
-            window.open("drawing.php", "_self"); // dodac do URL index zeby potem otworzyc odp rysunek!!!!
+            // console.log("Kliknięto: Rysunek id = " + idx);
+            window.open("drawing.php?id=" + idx, "_self"); // dodac do URL index zeby potem otworzyc odp rysunek!!!!
         });
         divDrawings.appendChild(newDrawingBtn);
     });

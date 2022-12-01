@@ -35,10 +35,14 @@ class Canvas {
 
 
         this.canvasID = 0;
+        this.currCurvesArray = [];
     }
 
     // załadowanie krzywej o odp indeksie z php
     loadCurves() {
+        // w jsonie mam cos takiego:
+        // {"id":"0"}
+        this.currCurvesArray = [];
         const xhr = new XMLHttpRequest();
         xhr.open("GET", "getJSON.php?id=" + this.canvasID.toString(), true);
 
@@ -53,8 +57,9 @@ class Canvas {
                         console.log(this.responseText);
                         const data = JSON.parse(this.responseText);
                         console.log(data);
-                        drawings.push(data);
-                        console.log(drawings);
+                        // tutaj to jeszcze rozdzielac wg indexu!!!!!
+                        this.currCurvesArray.push(data);
+                        
                         showDrawings(drawings);
                     }
                     else console.log("Błąd Ajax: nie otrzymano danych")
@@ -67,10 +72,31 @@ class Canvas {
         xhr.send();
     }
 
-    mapCanvas(oneCanvas)
+    // odwzorowanie całego zbioru krzywych spod konkretnego indexu
+    mapCanvas(currCurvesArray) {
+        /*
+        currCurvesArray to taka tablica krzywych cos takiego:
+            currCurvesArray = [{"type":"curve","color":"#000000","thickness":"5","points":[{"x":284,"y":298},{"x":282,"y":296}]},
+                      {"type":"curve","color":"#000000","thickness":"5","points":[{"x":284,"y":298},{"x":282,"y":296}]} ];
+            }
+            
+        */
+
+    }
 
     //odwzorowanie krzywej/linii/okręgu z PHP
     mapElement(element) {
+        /*
+        element to jedna krzywa cos takiego:
+            {"type":"curve",
+            "color":"#000000",
+            "thickness":"5",
+            "points":[
+                {"x":284,"y":298},
+                {"x":282,"y":296}]
+            }
+        */
+
         // chyba trzeba bedzie to jakos jeszcze przeskalowac przy mapowaniu
         this.context.beginPath();
 
@@ -144,6 +170,8 @@ class Canvas {
             startPoint: {}, // obiekty currPoint
             stopPoint: {}// obiekty currPoint
         };
+
+
     }
 
     // sprawdzenie i ustawienie rysowania konkretnego kształtu
@@ -318,7 +346,7 @@ class Canvas {
         // potem URL do którego ma zostać wysłane żądanie (request)
         // true wskazuje na tryb asynchroniczny
         // --------------------------------------------- dodac ID do url zeby php mial jakis identyfikator!!!!!
-        xhr.open("POST", "saveJSON.php", true);
+        xhr.open("POST", "saveJSON.php?id=" + this.canvasID.toString(), true);
 
         // ustawia wartość nagłówka żądania HTTP
         // podaję nazwę nagłówka i wartość do ustawienia jako treść tego nagłówka

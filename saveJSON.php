@@ -14,8 +14,16 @@
 // najpierw zrobie tylko zapis dla jednego ale musze dodac zapis ale i dopisywanie (write i append)
 // write json data
 
+
+
+
+// plik jsonowy nigdy nie bedzie pusty bo przy tworzeniu nowego canvasa tworzę nowe miejsce w jsonie
+
 $oldData = file_get_contents("json_data/data.json");
 var_dump($oldData);
+// pobranie linku - znalezione na stackoverflow, wspiera i http i https
+$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
 $newData = file_get_contents("php://input");
 if ($oldData == null) {
     $jsonNewData = json_encode($newData);
