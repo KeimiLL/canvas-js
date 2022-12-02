@@ -330,7 +330,6 @@ class Canvas {
         const jsonStr = JSON.stringify(element);
         console.log(jsonStr);
         this.sendJSON(jsonStr);
-        return jsonStr;
     }
 
     // próba wysłania JSONa do PHPa
@@ -346,7 +345,7 @@ class Canvas {
         // potem URL do którego ma zostać wysłane żądanie (request)
         // true wskazuje na tryb asynchroniczny
         // --------------------------------------------- dodac ID do url zeby php mial jakis identyfikator!!!!!
-        xhr.open("POST", "saveJSON.php?id=" + this.canvasID.toString(), true);
+        xhr.open("POST", "./saveJSON.php?id=" + this.canvasID.toString(), true);
 
         // ustawia wartość nagłówka żądania HTTP
         // podaję nazwę nagłówka i wartość do ustawienia jako treść tego nagłówka
@@ -362,7 +361,6 @@ class Canvas {
                 }
                 else console.log("Błąd: " + this.statusText)
             }
-
         }
         // wysyła żądanie na serwer
         xhr.send(jsonStr);

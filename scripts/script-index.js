@@ -37,9 +37,9 @@ function getDrawings() {
                     // console.log(drawings);
                     showDrawings(drawings);
                 }
-                else console.log("Błąd Ajax: nie otrzymano danych")
+                else console.log("Błąd: nie otrzymano danych")
             }
-            else console.log("Błąd Ajax: " + this.statusText)
+            else console.log("Błąd: " + this.statusText)
         }
 
     }
@@ -71,8 +71,25 @@ function showDrawings(drawings) {
     });
 }
 
-
+// stworzenie nowej strony z kolejnym dostepnym id
 createBtn.addEventListener('click', () => {
-    window.open("drawing.php?id=" + drawings.length - 1, "_self");
+    // trzeba utworzyć nowe miejsce w pliku json na canvasa
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "./saveJSON.php?id=" + drawings.length, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                if (this.responseText != null) {
+                    console.log(this.responseText);
+                }
+                else console.log("Błąd: nie otrzymano danych")
+            }
+            else console.log("Błąd: " + this.statusText)
+        }
+    }
+    xhr.send([]);
+    // i na koniec otworzenie nowej strony
+    // window.open("drawing.php?id=" + (drawings.length - 1), "_self");
 })
 
