@@ -1,16 +1,72 @@
 {
     "0": [
         {
-            "firstName": "John",
-            "lastName": "Doe"
+            "type": "curve",
+            "color": "#000000",
+            "thickness": 1,
+            "points": [
+                {
+                    "x": 276,
+                    "y": 537
+                },
+                {
+                    "x": 275,
+                    "y": 537
+                },
+                {
+                    "x": 274,
+                    "y": 537
+                },
+                {
+                    "x": 274,
+                    "y": 536
+                },
+                {
+                    "x": 274,
+                    "y": 535
+                }
+            ]
         },
         {
-            "firstName": "Anna",
-            "lastName": "Smith"
+            "type": "circle",
+            "color": "#000000",
+            "thickness": 1,
+            "startPoint": {
+                "x": 100,
+                "y": 100
+            },
+            "stopPoint": {
+                "x": 120,
+                "y": 130
+            }
         },
         {
-            "firstName": "Peter",
-            "lastName": "Jones"
+            "type": "line",
+            "color": "#ff0000",
+            "thickness": 1,
+            "startPoint": {
+                "x": 17,
+                "y": 200
+            },
+            "stopPoint": {
+                "x": 130,
+                "y": 230
+            }
+        }
+    ],
+    "1": [
+        {
+            "type": "circle",
+            "color": "#0000ff",
+            "thickness": 5,
+            "startPoint": {
+                "x": 10,
+                "y": 200
+            },
+            "stopPoint": {
+                "x": 100,
+                "y": 40
+            }
         }
     ]
 }

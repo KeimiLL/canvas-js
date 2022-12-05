@@ -3,9 +3,9 @@
 
 $jsonData = file_get_contents("json_data/data.json");
 $json_decoded = json_decode($jsonData, true);
-var_dump($json_decoded);
+// print_r($json_decoded);
 
-echo $json_decoded;
+echo count($json_decoded);
 
 // zwraca ilosc canvasow z pliku
 // if($json_decoded == null) {

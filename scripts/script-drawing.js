@@ -62,9 +62,9 @@ class Canvas {
                         
                         showDrawings(drawings);
                     }
-                    else console.log("Błąd Ajax: nie otrzymano danych")
+                    else console.log("Błąd: nie otrzymano danych")
                 }
-                else console.log("Błąd Ajax: " + this.statusText)
+                else console.log("Błąd: " + this.statusText)
             }
 
         }
@@ -159,7 +159,7 @@ class Canvas {
             color: "#fff",
             thickness: 1,
             startPoint: {},// obiekty currPoint
-            stopPoint: {},// obiekty currPoint
+            stopPoint: {}// obiekty currPoint
         };
 
         // Linia prosta

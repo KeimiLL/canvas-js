@@ -19,17 +19,16 @@ $oldData = json_decode($oldDataJSON, true);
 $newData = file_get_contents("php://input");
 echo "Old data: " . $oldData;
 echo "New data: " . $newData;
-// if ($oldData == null) {
-//     $jsonNewData = json_encode($newData);
-//     file_put_contents("json_data/data.json", $jsonNewData);
-// } else {
-//     array_push($oldData, $newData);
 
-//     $jsonMergedData = json_encode($oldData);
-//     file_put_contents("json_data/data.json", $jsonMergedData);
-// }
+if ($oldData == null) {
+    echo "Pusty plik";
+} else {
+    foreach($oldData as $key => $value) {
+        echo $key . " => " . $value . "<br>";
+      }
+}
 
-array_push($oldData, $newData);
+// array_push($oldData, $newData);
 
-$jsonMergedData = json_encode($oldData);
-file_put_contents("json_data/data.json", $jsonMergedData);
+// $jsonMergedData = json_encode($oldData);
+// file_put_contents("json_data/data.json", $jsonMergedData);
