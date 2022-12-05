@@ -13,18 +13,23 @@ parse_str($link_components['query'], $params);
 $canvasID = $params['id'];
 // var_dump($canvasID);
 ////////////////////////////////////////////////////////////////////////DOKONCZYC ODTAD ZAPIS WYZEJ POWINNO BYC OK
-// zwroci mi array("id" => [....])
+// zwroci mi array("0" => [....], "1" => [....])
 $oldData = json_decode($oldDataJSON, true);
 
 $newData = file_get_contents("php://input");
 echo "Old data: " . $oldData;
 echo "New data: " . $newData;
-if ($oldData == null) {
-    $jsonNewData = json_encode($newData);
-    file_put_contents("json_data/data.json", $jsonNewData);
-} else {
-    array_push($oldData, $newData);
+// if ($oldData == null) {
+//     $jsonNewData = json_encode($newData);
+//     file_put_contents("json_data/data.json", $jsonNewData);
+// } else {
+//     array_push($oldData, $newData);
 
-    $jsonMergedData = json_encode($oldData);
-    file_put_contents("json_data/data.json", $jsonMergedData);
-}
+//     $jsonMergedData = json_encode($oldData);
+//     file_put_contents("json_data/data.json", $jsonMergedData);
+// }
+
+array_push($oldData, $newData);
+
+$jsonMergedData = json_encode($oldData);
+file_put_contents("json_data/data.json", $jsonMergedData);
