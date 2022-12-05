@@ -9,7 +9,9 @@ $link_components = parse_url($link);
 
 // parsowanie stringa przekazanaego przeez link
 parse_str($link_components['query'], $params);
-// wydobycie id konkretnego canvasa
+// wydobycie id o jakiego canvasa chodzi
 $canvasID = $params['id'];
 
-echo $json_decoded[$canvasID];
+// teraz wydobycie tablicy krzywych spod konkretnego ID
+
+echo json_encode($json_decoded[$canvasID]);

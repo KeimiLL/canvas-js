@@ -2,7 +2,7 @@
 // plik jsonowy nigdy nie bedzie pusty bo przy tworzeniu nowego canvasa tworzę nowe miejsce w jsonie
 // pobieram dane z pliku json
 $oldDataJSON = file_get_contents("json_data/data.json");
-var_dump($oldDataJSON);
+
 // pobranie linku - znalezione na stackoverflow, wspiera i http i https
 $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 // parse url zwraca associative array z roznymi komponentami - znalezione na geeksforgeeks
@@ -15,18 +15,27 @@ $canvasID = $params['id'];
 ////////////////////////////////////////////////////////////////////////DOKONCZYC ODTAD ZAPIS WYZEJ POWINNO BYC OK
 // zwroci mi array("0" => [....], "1" => [....])
 $oldData = json_decode($oldDataJSON, true);
+// print_r($oldData[0]);
 
 $newData = file_get_contents("php://input");
-echo "Old data: " . $oldData;
-echo "New data: " . $newData;
+// $newData = json_decode(json_encode($newData), true);
+$newData = json_decode($newData, true);
+// var_dump($newData);
+// echo "Old data: " . $oldData;
 
-if ($oldData == null) {
+
+// print_r($oldData[0]);
+
+
+if (count($oldData) <= $canvasID) {
+    // czyli z takim id jeszcze nie ma wiec tworze puste miejsce
     echo "Pusty plik";
+    array_push($oldData[$canvasID], []);
 } else {
-    foreach($oldData as $key => $value) {
-        echo $key . " => " . $value . "<br>";
-      }
+    // czyli takie id juz jest wiec dopisuje nowe dane
+array_push($oldData[$canvasID], $newData);
 }
+file_put_contents("json_data/data.json", json_encode($oldData));
 
 // array_push($oldData, $newData);
 

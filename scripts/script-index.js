@@ -80,7 +80,7 @@ function showDrawings() {
 createBtn.addEventListener('click', () => {
     // trzeba utworzyć nowe miejsce w pliku json na canvasa
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "./saveJSON.php?id=" + length, true);
+    xhr.open("POST", "./createNewCanvas.php", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
@@ -93,8 +93,8 @@ createBtn.addEventListener('click', () => {
             else console.log("Błąd: " + this.statusText)
         }
     }
-    xhr.send([]);
+    xhr.send();
     // i na koniec otworzenie nowej strony
-    // window.open("drawing.php?id=" + (drawings.length - 1), "_self");
+    window.open("drawing.php?id=" + length, "_self");
 })
 

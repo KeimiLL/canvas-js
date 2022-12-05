@@ -35,14 +35,25 @@ class Canvas {
 
 
         this.canvasID = 0;
+        this.setCanvasID();
         this.currCurvesArray = [];
+
+        this.loadCurves();
+    }
+
+    //ustawienie ID z linku
+    setCanvasID() {
+        const url = window.location.search;
+        const param = new URLSearchParams(url);
+        this.canvasID = param.get("id");
+
+        console.log(this.canvasID);
+        // 
+        // if (id == null) window.open("index.html", "_self");
     }
 
     // załadowanie krzywej o odp indeksie z php
     loadCurves() {
-        // w jsonie mam cos takiego:
-        // {"id":"0"}
-        this.currCurvesArray = [];
         const xhr = new XMLHttpRequest();
         xhr.open("GET", "getJSON.php?id=" + this.canvasID.toString(), true);
 
@@ -54,13 +65,10 @@ class Canvas {
             if (this.readyState == 4) {
                 if (this.status == 200) {
                     if (this.responseText != null) {
-                        console.log(this.responseText);
                         const data = JSON.parse(this.responseText);
-                        console.log(data);
-                        // tutaj to jeszcze rozdzielac wg indexu!!!!!
-                        this.currCurvesArray.push(data);
-                        
-                        showDrawings(drawings);
+                        myCanvas.currCurvesArray = data.slice();
+                        myCanvas.mapCanvas(data);
+
                     }
                     else console.log("Błąd: nie otrzymano danych")
                 }
@@ -73,14 +81,19 @@ class Canvas {
     }
 
     // odwzorowanie całego zbioru krzywych spod konkretnego indexu
-    mapCanvas(currCurvesArray) {
+    mapCanvas(data) {
         /*
         currCurvesArray to taka tablica krzywych cos takiego:
             currCurvesArray = [{"type":"curve","color":"#000000","thickness":"5","points":[{"x":284,"y":298},{"x":282,"y":296}]},
                       {"type":"curve","color":"#000000","thickness":"5","points":[{"x":284,"y":298},{"x":282,"y":296}]} ];
-            }
-            
+            }            
         */
+        console.log(this.currCurvesArray);
+
+        this.currCurvesArray.forEach(ele => {
+            // console.log(ele);
+            this.mapElement(ele)
+        });
 
     }
 
@@ -105,11 +118,11 @@ class Canvas {
                 this.currCurve = element;
                 this.context.strokeStyle = this.currCurve.color;
                 this.context.fillStyle = this.currCurve.color;
-                this.context.lineWidth - this.currCurve.thickness;
+                this.context.lineWidth = this.currCurve.thickness;
+                this.context.moveTo(this.currCurve.points[0].x, this.currCurve.points[0].y);
 
                 this.currCurve.points.forEach(point => {
-                    this.canvas.moveTo(this.currCurve.startPoint.x, this.currCurve.startPoint.y);
-                    this.context.lineTo(point.x * this.canvas.width, point.y * this.canvas.height); // chyba do poprawy
+                    this.context.lineTo(point.x, point.y); // chyba do poprawy
                     this.context.stroke();
                 });
                 this.context.closePath();
@@ -119,7 +132,7 @@ class Canvas {
                 this.currCircle = element;
                 this.context.strokeStyle = this.currCircle.color;
                 this.context.fillStyle = this.currCircle.color;
-                this.context.lineWidth - this.currCircle.thickness;
+                this.context.lineWidth = this.currCircle.thickness;
 
                 const radius = Math.sqrt((this.currCircle.startPoint.x - this.currCircle.stopPoint.x) * (this.currCircle.startPoint.x - this.currCircle.stopPoint.x) + (this.currCircle.startPoint.y - this.currCircle.stopPoint.y) * (this.currCircle.startPoint.y - this.currCircle.stopPoint.y));
                 this.context.arc(this.currCircle.startPoint.x, this.currCircle.startPoint.y, radius, 0, Math.PI * 2);
@@ -129,9 +142,9 @@ class Canvas {
                 this.currLine = element;
                 this.context.strokeStyle = this.currLine.color;
                 this.context.fillStyle = this.currLine.color;
-                this.context.lineWidth - this.currLine.thickness;
+                this.context.lineWidth = this.currLine.thickness;
 
-                this.canvas.moveTo(this.currLine.startPoint.x, this.currLine.startPoint.y);
+                this.context.moveTo(this.currLine.startPoint.x, this.currLine.startPoint.y);
                 this.context.lineTo(this.currLine.stopPoint.x, this.currLine.stopPoint.y);
                 context.stroke();
                 break;
@@ -217,7 +230,7 @@ class Canvas {
                 this.currCurve.thickness = this.thickness.value;
                 const currPoint1Copy = { ...this.currPoint };
                 this.currCurve.points.push(currPoint1Copy);
-                console.log(this.currCurve);
+                // console.log(this.currCurve);
                 break;
             case '2': // rysowanie okręgów
                 this.getOffset(e.touches[0]);
@@ -283,16 +296,16 @@ class Canvas {
                 // wysylac na serwer krzywą this.currCurve
                 // i najlepiej odswiezyc widok z jsona na serwerze na najnowszy
                 // this.mapCurve(this.currCurve);
-                console.log(this.currCurve);
+                // console.log(this.currCurve);
                 this.elementToJSON(this.currCurve);
                 break;
             case '2': // rysowanie okręgów
-                console.log(this.currCircle);
+                // console.log(this.currCircle);
                 context.stroke();
                 this.elementToJSON(this.currCircle);
                 break;
             case '3': // rysowanie linii
-                console.log(this.currLine);
+                // console.log(this.currLine);
                 this.context.lineTo(this.currPoint.x, this.currPoint.y);
                 context.stroke();
                 this.elementToJSON(this.currLine);
@@ -328,7 +341,7 @@ class Canvas {
     // próba zapisu do JSON
     elementToJSON(element) {
         const jsonStr = JSON.stringify(element);
-        console.log(jsonStr);
+        // console.log(jsonStr);
         this.sendJSON(jsonStr);
     }
 
@@ -356,7 +369,7 @@ class Canvas {
             if (this.readyState == 4) {
                 if (this.status == 200) {
                     if (this.responseText != null) {
-                        console.log(this.responseText);
+                        // console.log(this.responseText);
                     }
                     else console.log("Błąd: nie otrzymano danych")
                 }
