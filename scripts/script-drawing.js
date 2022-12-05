@@ -46,10 +46,6 @@ class Canvas {
         const url = window.location.search;
         const param = new URLSearchParams(url);
         this.canvasID = param.get("id");
-
-        console.log(this.canvasID);
-        // 
-        // if (id == null) window.open("index.html", "_self");
     }
 
     // załadowanie krzywej o odp indeksie z php
@@ -84,9 +80,33 @@ class Canvas {
     mapCanvas(data) {
         /*
         currCurvesArray to taka tablica krzywych cos takiego:
-            currCurvesArray = [{"type":"curve","color":"#000000","thickness":"5","points":[{"x":284,"y":298},{"x":282,"y":296}]},
-                      {"type":"curve","color":"#000000","thickness":"5","points":[{"x":284,"y":298},{"x":282,"y":296}]} ];
-            }            
+            currCurvesArray = [
+        {
+            "type": "circle",
+            "color": "#0000ff",
+            "thickness": 5,
+            "startPoint": {
+                "x": 10,
+                "y": 200
+            },
+            "stopPoint": {
+                "x": 100,
+                "y": 40
+            }
+        },
+        {
+            "type": "line",
+            "color": "#db2929",
+            "thickness": "12",
+            "startPoint": {
+                "x": 90,
+                "y": 478
+            },
+            "stopPoint": {
+                "x": 284,
+                "y": 338
+            }
+        }]           
         */
         console.log(this.currCurvesArray);
 
@@ -112,16 +132,17 @@ class Canvas {
 
         // chyba trzeba bedzie to jakos jeszcze przeskalowac przy mapowaniu
         this.context.beginPath();
+        this.context.strokeStyle = element.color;
+        this.context.fillStyle = element.color;
+        this.context.lineWidth = element.thickness;
 
         switch (element.type.toString()) {
             case 'curve':
                 this.currCurve = element;
-                this.context.strokeStyle = this.currCurve.color;
-                this.context.fillStyle = this.currCurve.color;
-                this.context.lineWidth = this.currCurve.thickness;
                 this.context.moveTo(this.currCurve.points[0].x, this.currCurve.points[0].y);
 
                 this.currCurve.points.forEach(point => {
+                    this.context.moveTo(point.x, point.y);
                     this.context.lineTo(point.x, point.y); // chyba do poprawy
                     this.context.stroke();
                 });
@@ -130,9 +151,6 @@ class Canvas {
                 break;
             case 'circle':
                 this.currCircle = element;
-                this.context.strokeStyle = this.currCircle.color;
-                this.context.fillStyle = this.currCircle.color;
-                this.context.lineWidth = this.currCircle.thickness;
 
                 const radius = Math.sqrt((this.currCircle.startPoint.x - this.currCircle.stopPoint.x) * (this.currCircle.startPoint.x - this.currCircle.stopPoint.x) + (this.currCircle.startPoint.y - this.currCircle.stopPoint.y) * (this.currCircle.startPoint.y - this.currCircle.stopPoint.y));
                 this.context.arc(this.currCircle.startPoint.x, this.currCircle.startPoint.y, radius, 0, Math.PI * 2);
@@ -140,9 +158,6 @@ class Canvas {
                 break;
             case 'line':
                 this.currLine = element;
-                this.context.strokeStyle = this.currLine.color;
-                this.context.fillStyle = this.currLine.color;
-                this.context.lineWidth = this.currLine.thickness;
 
                 this.context.moveTo(this.currLine.startPoint.x, this.currLine.startPoint.y);
                 this.context.lineTo(this.currLine.stopPoint.x, this.currLine.stopPoint.y);
@@ -183,8 +198,6 @@ class Canvas {
             startPoint: {}, // obiekty currPoint
             stopPoint: {}// obiekty currPoint
         };
-
-
     }
 
     // sprawdzenie i ustawienie rysowania konkretnego kształtu
@@ -223,7 +236,7 @@ class Canvas {
         // dodane offsety żeby pole do rysowania mogło nie być tylko w lewym górnym rogu
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
-                this.context.beginPath();
+                // this.context.beginPath();
                 this.getOffset(e.touches[0]);
                 // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
                 this.currCurve.color = this.color.value;
@@ -259,11 +272,18 @@ class Canvas {
         e.preventDefault();
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
+            this.getOffset(e.touches[0]);
+            const currPoint11Copy = { ...this.currPoint };
+            this.currCurve.points.push(currPoint11Copy);
+
                 this.context.moveTo(this.currPoint.x, this.currPoint.y);
                 this.getOffset(e.touches[0]);
                 const currPoint1Copy = { ...this.currPoint };
                 this.currCurve.points.push(currPoint1Copy);
                 this.context.lineTo(this.currPoint.x, this.currPoint.y);
+                this.getOffset(e.touches[0]);
+            const currPoint111Copy = { ...this.currPoint };
+            this.currCurve.points.push(currPoint111Copy);
                 this.context.stroke();
 
                 break;
@@ -291,6 +311,9 @@ class Canvas {
     stop(e) {
         e.preventDefault();
 
+        // załadowanie starych danych przed wysłaniem nowych
+        // this.loadCurves();
+
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
                 // wysylac na serwer krzywą this.currCurve
@@ -311,11 +334,7 @@ class Canvas {
                 this.elementToJSON(this.currLine);
                 break;
         }
-
-        // i na koniec po wysłaniu na serwer wyczyszczenie obiektów
         // this.setDefaultObjects();
-        this.curvesArray.push(this.context.getImageData(0, 0, this.canvas.width, this.canvas.height));
-        this.idxCurvesArray += 1;
     }
 
     // zmiana koloru
@@ -420,7 +439,11 @@ const colorText = document.querySelector('#color-value');
 
 const radioBtnsShape = document.querySelectorAll('input[name="shape"]');
 
+
 const myCanvas = new Canvas(canvas, context, color, thickness, radioBtnsShape);
+// setInterval(function(){ 
+//     myCanvas.loadCurves();
+// }, 1000);
 
 clearBtn.addEventListener('click', () => {
     myCanvas.clearAll();

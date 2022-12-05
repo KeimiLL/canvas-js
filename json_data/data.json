@@ -75,29 +75,10 @@
         },
         {
             "type": "line",
-            "color": "#db1414",
-            "thickness": "8",
-            "startPoint": {
-                "x": 93,
-                "y": 414
-            },
-            "stopPoint": {
-                "x": 173,
-                "y": 328
-            }
-        },
-        {
-            "type": "line",
-            "color": "#000000",
-            "thickness": "5",
-            "startPoint": {
-                "x": 292,
-                "y": 272
-            },
-            "stopPoint": {
-                "x": 228,
-                "y": 270
-            }
+            "color": "#fff",
+            "thickness": 1,
+            "startPoint": [],
+            "stopPoint": []
         }
     ],
     [

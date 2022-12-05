@@ -47,7 +47,7 @@
         </div>
 
     </div>
-    <script src="scripts/script-drawing.js"></script>
+    <script src="scripts/script-drawing.js" async></script>
 
 </body>
 

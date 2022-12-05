@@ -1,4 +1,8 @@
 <?php
+//zabezpieczenie przed wielodostepem
+$fpath = fopen("lock.txt", "r+");
+flock($fpath, LOCK_EX); //to acquire an exclusive lock (writer)
+
 // plik jsonowy nigdy nie bedzie pusty bo przy tworzeniu nowego canvasa tworzę nowe miejsce w jsonie
 // pobieram dane z pliku json
 $oldDataJSON = file_get_contents("json_data/data.json");
@@ -11,21 +15,12 @@ $link_components = parse_url($link);
 parse_str($link_components['query'], $params);
 // wydobycie id konkretnego canvasa
 $canvasID = $params['id'];
-// var_dump($canvasID);
-////////////////////////////////////////////////////////////////////////DOKONCZYC ODTAD ZAPIS WYZEJ POWINNO BYC OK
-// zwroci mi array("0" => [....], "1" => [....])
+
 $oldData = json_decode($oldDataJSON, true);
 // print_r($oldData[0]);
 
 $newData = file_get_contents("php://input");
-// $newData = json_decode(json_encode($newData), true);
 $newData = json_decode($newData, true);
-// var_dump($newData);
-// echo "Old data: " . $oldData;
-
-
-// print_r($oldData[0]);
-
 
 if (count($oldData) <= $canvasID) {
     // czyli z takim id jeszcze nie ma wiec tworze puste miejsce
@@ -37,7 +32,5 @@ array_push($oldData[$canvasID], $newData);
 }
 file_put_contents("json_data/data.json", json_encode($oldData));
 
-// array_push($oldData, $newData);
-
-// $jsonMergedData = json_encode($oldData);
-// file_put_contents("json_data/data.json", $jsonMergedData);
+flock($fpath, LOCK_UN); // to release a lock (shared or exclusive)
+fclose($fpath);
