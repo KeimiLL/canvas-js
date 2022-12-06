@@ -1,5 +1,3 @@
-const drawings = [];
-
 class Canvas {
     constructor(canvas, context, color, thickness, radioBtns) {
         this.canvas = canvas;
@@ -18,10 +16,6 @@ class Canvas {
         this.startX = null;
         this.startY = null;
 
-        // potrzebne do undo()
-        this.curvesArray = [];
-        this.idxCurvesArray = -1;
-
         // pojedynczy punkt
         this.currPoint = { x: 0, y: 0 };
 
@@ -32,7 +26,6 @@ class Canvas {
 
         this.currCircle = {};
         this.setDefaultObjects();
-
 
         this.canvasID = 0;
         this.setCanvasID();
@@ -64,7 +57,6 @@ class Canvas {
                         const data = JSON.parse(this.responseText);
                         myCanvas.currCurvesArray = data.slice();
                         myCanvas.mapCanvas(data);
-
                     }
                     else console.log("Błąd: nie otrzymano danych")
                 }
@@ -108,7 +100,7 @@ class Canvas {
             }
         }]           
         */
-        console.log(this.currCurvesArray);
+        // console.log(this.currCurvesArray);
 
         this.currCurvesArray.forEach(ele => {
             // console.log(ele);
@@ -129,7 +121,6 @@ class Canvas {
                 {"x":282,"y":296}]
             }
         */
-
         // chyba trzeba bedzie to jakos jeszcze przeskalowac przy mapowaniu
         this.context.beginPath();
         this.context.strokeStyle = element.color;
@@ -138,29 +129,32 @@ class Canvas {
 
         switch (element.type.toString()) {
             case 'curve':
-                this.currCurve = element;
-                this.context.moveTo(this.currCurve.points[0].x, this.currCurve.points[0].y);
+                this.context.moveTo(element.points[0].x, element.points[0].y);
 
-                this.currCurve.points.forEach(point => {
-                    this.context.moveTo(point.x, point.y);
-                    this.context.lineTo(point.x, point.y); // chyba do poprawy
+                // element.points.forEach(point => {
+                //     this.context.moveTo(point.x, point.y);
+                //     this.context.lineTo(point.x, point.y); // chyba do poprawy
+                //     this.context.fill();
+                //     this.context.stroke();
+                // });
+
+                for(let i = 0; i < element.points.length; i++){
+                    this.context.moveTo(element.points[i].x, element.points[i].y);
+                    this.context.lineTo(element.points[i].x, element.points[i].y); // chyba do poprawy
+                    // this.context.fill();
                     this.context.stroke();
-                });
+                };
                 this.context.closePath();
-                this.context.fill();
+
                 break;
             case 'circle':
-                this.currCircle = element;
-
-                const radius = Math.sqrt((this.currCircle.startPoint.x - this.currCircle.stopPoint.x) * (this.currCircle.startPoint.x - this.currCircle.stopPoint.x) + (this.currCircle.startPoint.y - this.currCircle.stopPoint.y) * (this.currCircle.startPoint.y - this.currCircle.stopPoint.y));
-                this.context.arc(this.currCircle.startPoint.x, this.currCircle.startPoint.y, radius, 0, Math.PI * 2);
+                const radius = Math.sqrt((element.startPoint.x - element.stopPoint.x) * (element.startPoint.x - element.stopPoint.x) + (element.startPoint.y - element.stopPoint.y) * (element.startPoint.y - element.stopPoint.y));
+                this.context.arc(element.startPoint.x, element.startPoint.y, radius, 0, Math.PI * 2);
                 context.stroke();
                 break;
             case 'line':
-                this.currLine = element;
-
-                this.context.moveTo(this.currLine.startPoint.x, this.currLine.startPoint.y);
-                this.context.lineTo(this.currLine.stopPoint.x, this.currLine.stopPoint.y);
+                this.context.moveTo(element.startPoint.x, element.startPoint.y);
+                this.context.lineTo(element.stopPoint.x, element.stopPoint.y);
                 context.stroke();
                 break;
         }
@@ -236,7 +230,7 @@ class Canvas {
         // dodane offsety żeby pole do rysowania mogło nie być tylko w lewym górnym rogu
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
-                // this.context.beginPath();
+                this.context.beginPath();
                 this.getOffset(e.touches[0]);
                 // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
                 this.currCurve.color = this.color.value;
@@ -272,18 +266,11 @@ class Canvas {
         e.preventDefault();
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
-            this.getOffset(e.touches[0]);
-            const currPoint11Copy = { ...this.currPoint };
-            this.currCurve.points.push(currPoint11Copy);
-
                 this.context.moveTo(this.currPoint.x, this.currPoint.y);
                 this.getOffset(e.touches[0]);
                 const currPoint1Copy = { ...this.currPoint };
                 this.currCurve.points.push(currPoint1Copy);
                 this.context.lineTo(this.currPoint.x, this.currPoint.y);
-                this.getOffset(e.touches[0]);
-            const currPoint111Copy = { ...this.currPoint };
-            this.currCurve.points.push(currPoint111Copy);
                 this.context.stroke();
 
                 break;
@@ -348,7 +335,6 @@ class Canvas {
     changeThickness() {
         // console.log("Zmieniona grubość linii");
         this.context.lineWidth = this.thickness.value;
-
     }
 
     // zmiana końcówki do rysowania
@@ -427,7 +413,7 @@ const canvas = document.querySelector('#canvas');
 
 // dodałem drugi argument {willReadFrequently: true} 
 // bo był warning przy samym '2d'
-const context = canvas.getContext('2d', { willReadFrequently: true });
+const context = canvas.getContext('2d');
 
 const clearBtn = document.querySelector('#clear-btn');
 const undoBtn = document.querySelector('#undo-btn');
@@ -438,12 +424,16 @@ const color = document.querySelector('#color');
 const colorText = document.querySelector('#color-value');
 
 const radioBtnsShape = document.querySelectorAll('input[name="shape"]');
-
-
 const myCanvas = new Canvas(canvas, context, color, thickness, radioBtnsShape);
-// setInterval(function(){ 
-//     myCanvas.loadCurves();
-// }, 1000);
+
+window.onload = function () {
+    
+    myCanvas.loadCurves();
+    // window.setInterval(function () {
+    //     myCanvas.loadCurves();
+    // }, 1000);
+}
+
 
 clearBtn.addEventListener('click', () => {
     myCanvas.clearAll();

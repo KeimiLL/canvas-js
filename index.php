@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="images/icon.png">
     <title>Edytor w canvas</title>
     <link rel="stylesheet" href="styles/styles-index.css">
-
+    <script src="scripts/script-index.js" defer></script>
 </head>
 
 <body>
@@ -24,6 +24,5 @@
     </div>
 
 </body>
-<script src="scripts/script-index.js" defer></script>
 
 </html>

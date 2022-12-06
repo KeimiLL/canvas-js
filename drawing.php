@@ -8,7 +8,7 @@
     <title>Rysunek - Edytor w canvas</title>
 
     <link rel="stylesheet" href="styles/styles-drawing.css">
-
+    <script src="scripts/script-drawing.js" async></script>
 </head>
 
 <body>
@@ -47,7 +47,7 @@
         </div>
 
     </div>
-    <script src="scripts/script-drawing.js" async></script>
+    
 
 </body>
 
