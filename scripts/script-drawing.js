@@ -31,10 +31,11 @@ class Canvas {
         this.canvasID = 0;
         this.setCanvasID();
         this.currCurvesArray = [];
-
+        this.clearAll();
         this.loadCurves();
-        
-        this.marker = 0; // znacznik ktory = 1 gdy jest undo lub clearALl
+
+        this.curves = []
+        this.isDrawing = false;
     }
 
     //ustawienie ID z linku
@@ -108,6 +109,8 @@ class Canvas {
         */
         // console.log(this.currCurvesArray);
 
+        if (this.curves !== this.currCurvesArray) this.clearAll();
+        this.curves = this.currCurvesArray;
         this.currCurvesArray.forEach(ele => {
             // console.log(ele);
             this.mapElement(ele)
@@ -207,11 +210,12 @@ class Canvas {
     // czyści całą ramkę
     clearAll() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.setDefaultObjects();
+        // this.setDefaultObjects();
     }
 
     // zaczynamy rysowanie
     start(e) {
+        this.isDrawing = true;
         e.preventDefault();
         this.setDefaultObjects();
 
@@ -313,6 +317,7 @@ class Canvas {
                 this.elementToJSON(this.currLine);
                 break;
         }
+        this.isDrawing = false;
         // this.setDefaultObjects();
     }
 
@@ -430,7 +435,8 @@ window.onload = function () {
 
     myCanvas.loadCurves();
     window.setInterval(function () {
-        myCanvas.loadCurves();
+        // myCanvas.clearAll();
+        if(!myCanvas.isDrawing) myCanvas.loadCurves();
     }, 1000);
 }
 
