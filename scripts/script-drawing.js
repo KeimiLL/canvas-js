@@ -337,7 +337,7 @@ class Canvas {
         this.elementToJSON(1);
     }
 
-
+    // usuwa wszystkie krzywe z canvasa
     clearAllBtn() {
         this.elementToJSON(2);
     }
@@ -375,7 +375,7 @@ window.onload = function () {
 
     myCanvas.loadCurves();
     window.setInterval(function () {
-        if(!myCanvas.isDrawing) myCanvas.loadCurves();
+        if (!myCanvas.isDrawing) myCanvas.loadCurves();
     }, 1000);
 }
 
@@ -415,7 +415,7 @@ canvas.addEventListener('touchmove', (e) => {
 })
 
 // przycisk do testowania zapisu do JSON
-const saveBtn = document.querySelector('#save-btn');
-saveBtn.addEventListener('click', () => {
-    myCanvas.elementToJSON();
-})
+// const saveBtn = document.querySelector('#save-btn');
+// saveBtn.addEventListener('click', () => {
+//     myCanvas.elementToJSON();
+// })

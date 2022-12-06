@@ -8,11 +8,8 @@ const divDrawings = document.querySelector('.div-drawings');
 window.onload = function () {
     let length = 0;
     getDrawings();
-    // window.setInterval(getDrawings, 1000);
+    window.setInterval(getDrawings, 1000);
 };
-
-// window.setInterval(getDrawings, 1000);
-
 
 // pobranie rysunkow i potem przekazanie ich do funkcji 
 // wyswietlajacej na glownym ekranie

@@ -1,33 +1,35 @@
-:root{
-	box-sizing:border-box;
+:root {
+    box-sizing: border-box;
 }
 
 * {
-    background-color: #7b9ce3;
+    background-color: #424899;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
+    color: white;
 }
 
-.main-div{
+.main-div {
     margin: 10px auto;
     width: 95%;
     height: 70vh;
     position: relative;
 }
 
-canvas{
+canvas {
     width: 100%;
     height: 100%;
     display: block;
     position: absolute;
-    left: 0; 
+    left: 0;
     top: 0;
     background-color: white;
 }
 
-#slider-value, #color-value {
-    color:rgb(15, 48, 9); 
+#slider-value,
+#color-value {
+    color: rgb(227, 241, 198);
     font-weight: bold;
 }
 
@@ -64,28 +66,31 @@ canvas{
 #undo-btn,
 #save-btn,
 #back-btn {
-    width: 105px;
-    height: 30px;
-    font-size: 14px;
+    width: 120px;
+    height: 28px;
+    font-size: 16px;
     font-weight: bold;
-    border: 2px solid #555;
-    margin-bottom: 2px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    border: none;
+    margin-bottom: 8px;
+    color: #fff;
 }
 
 #clear-btn {
-    background-color: rgb(144, 255, 130);
+    background-color: #20c277;
 }
 
 #undo-btn {
-    background-color: rgb(234, 255, 113);
+    background-color: #dea404;
 }
 
-#save-btn {
+/* #save-btn {
     background-color: rgb(255, 210, 112);
-}
+} */
 
 #back-btn {
-    background-color: rgb(233, 122, 255);
+    background-color: #d1605a;
 }
 
 .feature label {
@@ -100,6 +105,7 @@ canvas{
     margin: 0;
     text-align: left;
 }
+
 #div-shapes label {
     display: block;
 }

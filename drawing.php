@@ -34,14 +34,14 @@
         <div class="feature" id="div-shapes">
             <label><input type="radio" class="shape" name="shape" value="1" checked /> &#9998</label>
             <label><input type="radio" class="shape" name="shape" value="2" /> &#9711</label>
-            <label><input type="radio" class="shape" name="shape" value="3" /> &#9472</label>
+            <label><input type="radio" class="shape" name="shape" value="3" />&ensp;&#8725</label>
         </div>
 
         <div class="btns">
             <button id="clear-btn">Wyczyść</button>
             <button id="undo-btn">Cofnij</button>
 
-            <button id="save-btn">Zapisz</button>
+            <!-- <button id="save-btn">Zapisz</button> -->
 
             <button id="back-btn" onclick="window.location.href='index.php';">Strona główna</button>
         </div>
