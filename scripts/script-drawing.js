@@ -139,7 +139,7 @@ class Canvas {
                 break;
             case 'circle':
                 const radius = Math.sqrt((element.startPoint.x - element.stopPoint.x) * (element.startPoint.x - element.stopPoint.x) + (element.startPoint.y - element.stopPoint.y) * (element.startPoint.y - element.stopPoint.y));
-                this.context.arc(element.startPoint.x, element.startPoint.y, radius, 0, Math.PI * 2);
+                this.context.arc(element.stopPoint.x, element.stopPoint.y, radius, 0, Math.PI * 2);
                 context.stroke();
                 break;
             case 'line':
@@ -270,10 +270,6 @@ class Canvas {
 
                 const currPoint2Copy = { ...this.currPoint };
                 this.currCircle.stopPoint = currPoint2Copy;
-
-                const radius = Math.sqrt((this.startX - this.currPoint.x) * (this.startX - this.currPoint.x) + (this.startY - this.currPoint.y) * (this.startY - this.currPoint.y));
-
-                this.context.arc(this.currPoint.x, this.currPoint.y, radius, 0, Math.PI * 2);
                 break;
             case '3': // rysowanie linii
                 this.context.moveTo(this.startX, this.startY);
@@ -301,6 +297,9 @@ class Canvas {
                 break;
             case '2': // rysowanie okręgów
                 // console.log(this.currCircle);
+                const radius = Math.sqrt((this.startX - this.currPoint.x) * (this.startX - this.currPoint.x) + (this.startY - this.currPoint.y) * (this.startY - this.currPoint.y));
+
+                this.context.arc(this.currPoint.x, this.currPoint.y, radius, 0, Math.PI * 2);
                 context.stroke();
                 this.elementToJSON(this.currCircle);
                 break;
@@ -417,7 +416,7 @@ const radioBtnsShape = document.querySelectorAll('input[name="shape"]');
 const myCanvas = new Canvas(canvas, context, color, thickness, radioBtnsShape);
 
 window.onload = function () {
-    
+
     myCanvas.loadCurves();
     // window.setInterval(function () {
     //     myCanvas.loadCurves();
