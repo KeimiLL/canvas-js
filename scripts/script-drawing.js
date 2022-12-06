@@ -1,3 +1,4 @@
+
 class Canvas {
     constructor(canvas, context, color, thickness, radioBtns) {
         this.canvas = canvas;
@@ -32,6 +33,8 @@ class Canvas {
         this.currCurvesArray = [];
 
         this.loadCurves();
+        
+        this.marker = 0; // znacznik ktory = 1 gdy jest undo lub clearALl
     }
 
     //ustawienie ID z linku
@@ -43,6 +46,8 @@ class Canvas {
 
     // załadowanie krzywej o odp indeksie z php
     loadCurves() {
+        if (this.marker) this.clearAll();
+        this.marker = 0;
         const xhr = new XMLHttpRequest();
         xhr.open("GET", "getJSON.php?id=" + this.canvasID.toString(), true);
 
@@ -55,6 +60,7 @@ class Canvas {
                 if (this.status == 200) {
                     if (this.responseText != null) {
                         const data = JSON.parse(this.responseText);
+                        console.log(data);
                         myCanvas.currCurvesArray = data.slice();
                         myCanvas.mapCanvas(data);
                     }
@@ -202,9 +208,6 @@ class Canvas {
     clearAll() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.setDefaultObjects();
-
-        this.curvesArray = [];
-        this.idxCurvesArray = -1;
     }
 
     // zaczynamy rysowanie
@@ -376,19 +379,22 @@ class Canvas {
 
     // usuwa ostatnią narysowaną rzecz
     undo() {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "./undoJSON.php?id=" + this.canvasID.toString(), true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = function () {
-            if (this.readyState == 4) {
-                if (this.status == 200) {
-                    myCanvas.loadCurves();
-                }
-                else console.log("Błąd: " + this.statusText)
-            }
-        }
-        // wysyła żądanie na serwer
-        xhr.send();
+        this.marker = 1;
+        this.clearAll();
+        this.elementToJSON(1);
+        // const xhr = new XMLHttpRequest();
+        // xhr.open("POST", "./undoJSON.php?id=" + this.canvasID.toString(), true);
+        // xhr.setRequestHeader("Content-Type", "application/json");
+        // xhr.onreadystatechange = function () {
+        //     if (this.readyState == 4) {
+        //         if (this.status == 200) {
+        //             myCanvas.loadCurves();
+        //         }
+        //         else console.log("Błąd: " + this.statusText)
+        //     }
+        // }
+        // // wysyła żądanie na serwer
+        // xhr.send();
     }
 
     // liczenie offsetów

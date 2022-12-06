@@ -26,11 +26,26 @@ if (count($oldData) <= $canvasID) {
     // czyli z takim id jeszcze nie ma wiec tworze puste miejsce
     echo "Nie ma tego id";
     array_push($oldData, []);
-    array_push($oldData[$canvasID], $newData);
+    if ($newData == 1) {
+    } else {
+
+
+        array_push($oldData[$canvasID], $newData);
+    }
 } else {
     // czyli takie id juz jest wiec dopisuje nowe dane
-array_push($oldData[$canvasID], $newData);
+    if ($newData == 1) {
+        if (count($oldData[$canvasID]) <= 1) {
+            $oldData[$canvasID] = [];
+        } else {
+            array_pop($oldData[$canvasID]);
+        }
+    } else {
+        array_push($oldData[$canvasID], $newData);
+    }
 }
+
+
 file_put_contents("json_data/data.json", json_encode($oldData));
 
 flock($fpath, LOCK_UN); // to release a lock (shared or exclusive)
