@@ -1,4 +1,3 @@
-
 class Canvas {
     constructor(canvas, context, color, thickness, radioBtns) {
         this.canvas = canvas;
@@ -31,7 +30,7 @@ class Canvas {
         this.canvasID = 0;
         this.setCanvasID();
         this.currCurvesArray = [];
-        this.clearAll();
+        this.clearView();
         this.loadCurves();
 
         this.curves = []
@@ -47,8 +46,6 @@ class Canvas {
 
     // załadowanie krzywej o odp indeksie z php
     loadCurves() {
-        if (this.marker) this.clearAll();
-        this.marker = 0;
         const xhr = new XMLHttpRequest();
         xhr.open("GET", "getJSON.php?id=" + this.canvasID.toString(), true);
 
@@ -77,60 +74,15 @@ class Canvas {
 
     // odwzorowanie całego zbioru krzywych spod konkretnego indexu
     mapCanvas(data) {
-        /*
-        currCurvesArray to taka tablica krzywych cos takiego:
-            currCurvesArray = [
-        {
-            "type": "circle",
-            "color": "#0000ff",
-            "thickness": 5,
-            "startPoint": {
-                "x": 10,
-                "y": 200
-            },
-            "stopPoint": {
-                "x": 100,
-                "y": 40
-            }
-        },
-        {
-            "type": "line",
-            "color": "#db2929",
-            "thickness": "12",
-            "startPoint": {
-                "x": 90,
-                "y": 478
-            },
-            "stopPoint": {
-                "x": 284,
-                "y": 338
-            }
-        }]           
-        */
-        // console.log(this.currCurvesArray);
-
-        if (this.curves !== this.currCurvesArray) this.clearAll();
+        if (this.curves !== this.currCurvesArray) this.clearView();
         this.curves = this.currCurvesArray;
         this.currCurvesArray.forEach(ele => {
-            // console.log(ele);
             this.mapElement(ele)
         });
-
     }
 
     //odwzorowanie krzywej/linii/okręgu z PHP
     mapElement(element) {
-        /*
-        element to jedna krzywa cos takiego:
-            {"type":"curve",
-            "color":"#000000",
-            "thickness":"5",
-            "points":[
-                {"x":284,"y":298},
-                {"x":282,"y":296}]
-            }
-        */
-        // chyba trzeba bedzie to jakos jeszcze przeskalowac przy mapowaniu
         this.context.beginPath();
         this.context.strokeStyle = element.color;
         this.context.fillStyle = element.color;
@@ -157,8 +109,6 @@ class Canvas {
                 context.stroke();
                 break;
         }
-        // wyczyszczenie krzywych
-        // this.setDefaultObjects();
     }
 
     //wyczyszczenie obiektow i domyslne ustawienie własności
@@ -207,10 +157,10 @@ class Canvas {
         console.log("Wybrana opcja: " + this.radioValue);
     }
 
-    // czyści całą ramkę
-    clearAll() {
+    // czyści widok całej ramki
+    clearView() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        // this.setDefaultObjects();
+        this.setDefaultObjects();
     }
 
     // zaczynamy rysowanie
@@ -384,22 +334,12 @@ class Canvas {
 
     // usuwa ostatnią narysowaną rzecz
     undo() {
-        this.marker = 1;
-        this.clearAll();
         this.elementToJSON(1);
-        // const xhr = new XMLHttpRequest();
-        // xhr.open("POST", "./undoJSON.php?id=" + this.canvasID.toString(), true);
-        // xhr.setRequestHeader("Content-Type", "application/json");
-        // xhr.onreadystatechange = function () {
-        //     if (this.readyState == 4) {
-        //         if (this.status == 200) {
-        //             myCanvas.loadCurves();
-        //         }
-        //         else console.log("Błąd: " + this.statusText)
-        //     }
-        // }
-        // // wysyła żądanie na serwer
-        // xhr.send();
+    }
+
+
+    clearAllBtn() {
+        this.elementToJSON(2);
     }
 
     // liczenie offsetów
@@ -435,14 +375,13 @@ window.onload = function () {
 
     myCanvas.loadCurves();
     window.setInterval(function () {
-        // myCanvas.clearAll();
         if(!myCanvas.isDrawing) myCanvas.loadCurves();
     }, 1000);
 }
 
 
 clearBtn.addEventListener('click', () => {
-    myCanvas.clearAll();
+    myCanvas.clearAllBtn();
 })
 
 undoBtn.addEventListener('click', () => {

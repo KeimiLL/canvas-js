@@ -21,15 +21,14 @@ $oldData = json_decode($oldDataJSON, true);
 
 $newData = file_get_contents("php://input");
 $newData = json_decode($newData, true);
+// newData == 1 to undo
+// newData == 2 to clearAllBtn
 
 if (count($oldData) <= $canvasID) {
     // czyli z takim id jeszcze nie ma wiec tworze puste miejsce
     echo "Nie ma tego id";
     array_push($oldData, []);
-    if ($newData == 1) {
-    } else {
-
-
+    if ($newData != 1 && $newData != 2) {
         array_push($oldData[$canvasID], $newData);
     }
 } else {
@@ -40,6 +39,8 @@ if (count($oldData) <= $canvasID) {
         } else {
             array_pop($oldData[$canvasID]);
         }
+    } else if ($newData == 2) {
+        $oldData[$canvasID] = [];
     } else {
         array_push($oldData[$canvasID], $newData);
     }
