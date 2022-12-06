@@ -376,14 +376,19 @@ class Canvas {
 
     // usuwa ostatnią narysowaną rzecz
     undo() {
-        if (this.idxCurvesArray <= 0) {
-            this.clearAll();
-            return;
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "./undoJSON.php?id=" + this.canvasID.toString(), true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    myCanvas.loadCurves();
+                }
+                else console.log("Błąd: " + this.statusText)
+            }
         }
-
-        this.idxCurvesArray -= 1;
-        this.curvesArray.pop();
-        this.context.putImageData(this.curvesArray[this.idxCurvesArray], 0, 0);
+        // wysyła żądanie na serwer
+        xhr.send();
     }
 
     // liczenie offsetów
@@ -418,9 +423,9 @@ const myCanvas = new Canvas(canvas, context, color, thickness, radioBtnsShape);
 window.onload = function () {
 
     myCanvas.loadCurves();
-    // window.setInterval(function () {
-    //     myCanvas.loadCurves();
-    // }, 1000);
+    window.setInterval(function () {
+        myCanvas.loadCurves();
+    }, 1000);
 }
 
 
@@ -430,6 +435,7 @@ clearBtn.addEventListener('click', () => {
 
 undoBtn.addEventListener('click', () => {
     myCanvas.undo();
+    myCanvas.loadCurves();
 })
 
 color.addEventListener('input', () => {

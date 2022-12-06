@@ -15,21 +15,20 @@ $link_components = parse_url($link);
 parse_str($link_components['query'], $params);
 // wydobycie id konkretnego canvasa
 $canvasID = $params['id'];
-
-$oldData = json_decode($oldDataJSON, true);
-// print_r($oldData[0]);
-
 $newData = file_get_contents("php://input");
-$newData = json_decode($newData, true);
+$oldData = json_decode($oldDataJSON, true);
 
 if (count($oldData) <= $canvasID) {
     // czyli z takim id jeszcze nie ma wiec tworze puste miejsce
-    echo "Nie ma tego id";
+    echo "Nie ma takiego id";
     array_push($oldData, []);
-    array_push($oldData[$canvasID], $newData);
 } else {
-    // czyli takie id juz jest wiec dopisuje nowe dane
-array_push($oldData[$canvasID], $newData);
+    // czyli takie id juz jest wiec patrze czy na podanym indeksie mam juz jakies krzywe
+    if (count($oldData[$canvasID]) <= 1) {
+        $oldData[$canvasID] = [];
+    } else {
+        array_pop($oldData[$canvasID]); 
+    }
 }
 file_put_contents("json_data/data.json", json_encode($oldData));
 
