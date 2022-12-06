@@ -25,7 +25,8 @@ $newData = json_decode($newData, true);
 if (count($oldData) <= $canvasID) {
     // czyli z takim id jeszcze nie ma wiec tworze puste miejsce
     echo "Pusty plik";
-    array_push($oldData[$canvasID], []);
+    array_push($oldData, []);
+    array_push($oldData[$canvasID], $newData);
 } else {
     // czyli takie id juz jest wiec dopisuje nowe dane
 array_push($oldData[$canvasID], $newData);
