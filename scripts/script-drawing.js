@@ -131,21 +131,11 @@ class Canvas {
             case 'curve':
                 this.context.moveTo(element.points[0].x, element.points[0].y);
 
-                // element.points.forEach(point => {
-                //     this.context.moveTo(point.x, point.y);
-                //     this.context.lineTo(point.x, point.y); // chyba do poprawy
-                //     this.context.fill();
-                //     this.context.stroke();
-                // });
-
-                for(let i = 0; i < element.points.length; i++){
-                    this.context.moveTo(element.points[i].x, element.points[i].y);
-                    this.context.lineTo(element.points[i].x, element.points[i].y); // chyba do poprawy
-                    // this.context.fill();
+                element.points.forEach(point => {
+                    this.context.lineTo(point.x, point.y);
                     this.context.stroke();
-                };
+                });
                 this.context.closePath();
-
                 break;
             case 'circle':
                 const radius = Math.sqrt((element.startPoint.x - element.stopPoint.x) * (element.startPoint.x - element.stopPoint.x) + (element.startPoint.y - element.stopPoint.y) * (element.startPoint.y - element.stopPoint.y));
@@ -159,7 +149,7 @@ class Canvas {
                 break;
         }
         // wyczyszczenie krzywych
-        this.setDefaultObjects();
+        // this.setDefaultObjects();
     }
 
     //wyczyszczenie obiektow i domyslne ustawienie własności
