@@ -22,7 +22,7 @@ function getDrawings() {
         if (this.readyState == 4) {
             if (this.status == 200) {
                 if (this.responseText != null) {
-                    console.log("Odp: " + this.responseText);
+                    // console.log("Odp: " + this.responseText);
                     length = this.responseText;
                     showDrawings();
                 }
@@ -43,11 +43,11 @@ function showDrawings() {
         divDrawings.removeChild(divDrawings.firstChild);
     }
 
-    console.log("Ile ma length: " + length);
+    // console.log("Ile ma length: " + length);
     // wyswietlam nowe podglady
     for (let idx = 0; idx < length; idx++) {
         const newDrawingBtn = document.createElement('button');
-        newDrawingBtn.innerText = "Rysunek id = " + idx;
+        newDrawingBtn.innerText = "Rysunek " + (idx + 1);
         newDrawingBtn.setAttribute('id', idx);
         newDrawingBtn.setAttribute('class', 'btn-drawing');
         newDrawingBtn.addEventListener('click', () => {
