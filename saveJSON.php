@@ -17,7 +17,6 @@ parse_str($link_components['query'], $params);
 $canvasID = $params['id'];
 
 $oldData = json_decode($oldDataJSON, true);
-// print_r($oldData[0]);
 
 $newData = file_get_contents("php://input");
 $newData = json_decode($newData, true);

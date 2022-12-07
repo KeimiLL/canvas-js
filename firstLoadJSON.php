@@ -3,8 +3,6 @@
 $fpath = fopen("lock.txt", "r+");
 flock($fpath, LOCK_EX); //to acquire an exclusive lock (writer)
 
-// plik zwracajacy ilosc canasow
-
 $jsonData = file_get_contents("json_data/data.json");
 $json_decoded = json_decode($jsonData, true);
 

@@ -41,8 +41,6 @@
             <button id="clear-btn">Wyczyść</button>
             <button id="undo-btn">Cofnij</button>
 
-            <!-- <button id="save-btn">Zapisz</button> -->
-
             <button id="back-btn" onclick="window.location.href='index.php';">Strona główna</button>
         </div>
 

@@ -8,7 +8,6 @@ class Canvas {
         this.context = context;
         this.color = color;
         this.thickness = thickness;
-
         this.radioBtns = radioBtns;
         this.radioValue = "1";
 
@@ -21,9 +20,7 @@ class Canvas {
 
         // obiekty na odpowiednie krzywe potrzebne do zapisu i odczytu z pliku
         this.currCurve = {};
-
         this.currLine = {};
-
         this.currCircle = {};
         this.setDefaultObjects();
 
@@ -58,7 +55,6 @@ class Canvas {
                 if (this.status == 200) {
                     if (this.responseText != null) {
                         const data = JSON.parse(this.responseText);
-                        console.log(data);
                         myCanvas.currCurvesArray = data.slice();
                         myCanvas.mapCanvas(data);
                     }
@@ -179,12 +175,10 @@ class Canvas {
             case '1': // rysowanie swobodne
                 this.context.beginPath();
                 this.getOffset(e.touches[0]);
-                // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
                 this.currCurve.color = this.color.value;
                 this.currCurve.thickness = this.thickness.value;
                 const currPoint1Copy = { ...this.currPoint };
                 this.currCurve.points.push(currPoint1Copy);
-                // console.log(this.currCurve);
                 break;
             case '2': // rysowanie okręgów
                 this.getOffset(e.touches[0]);
@@ -196,7 +190,6 @@ class Canvas {
                 break;
             case '3': // rysowanie linii
                 this.context.beginPath();
-                // this.context.arc(this.position.x, this.position.y, this.thickness.value / 2, 0, 2 * Math.PI);
                 this.getOffset(e.touches[0]);
                 this.currLine.color = this.color.value;
                 this.currLine.thickness = this.thickness.value;
@@ -232,7 +225,6 @@ class Canvas {
                 this.context.moveTo(this.startX, this.startY);
                 this.getOffset(e.touches[0]);
                 this.currLine.stopPoint = { ...this.currPoint };
-                // this.context.lineTo(this.currPoint.x, this.currPoint.y);
                 break;
         }
     }
@@ -246,14 +238,9 @@ class Canvas {
 
         switch (this.radioValue.toString()) {
             case '1': // rysowanie swobodne
-                // wysylac na serwer krzywą this.currCurve
-                // i najlepiej odswiezyc widok z jsona na serwerze na najnowszy
-                // this.mapCurve(this.currCurve);
-                // console.log(this.currCurve);
                 this.elementToJSON(this.currCurve);
                 break;
             case '2': // rysowanie okręgów
-                // console.log(this.currCircle);
                 const radius = Math.sqrt((this.startX - this.currPoint.x) * (this.startX - this.currPoint.x) + (this.startY - this.currPoint.y) * (this.startY - this.currPoint.y));
 
                 this.context.arc(this.currPoint.x, this.currPoint.y, radius, 0, Math.PI * 2);
@@ -261,19 +248,16 @@ class Canvas {
                 this.elementToJSON(this.currCircle);
                 break;
             case '3': // rysowanie linii
-                // console.log(this.currLine);
                 this.context.lineTo(this.currPoint.x, this.currPoint.y);
                 context.stroke();
                 this.elementToJSON(this.currLine);
                 break;
         }
         this.isDrawing = false;
-        // this.setDefaultObjects();
     }
 
     // zmiana koloru
     changeColor() {
-        // console.log("Zmieniony kolor");
         this.context.strokeStyle = this.color.value;
         this.context.fillStyle = this.color.value;
     }
@@ -378,7 +362,6 @@ window.onload = function () {
         if (!myCanvas.isDrawing) myCanvas.loadCurves();
     }, 1000);
 }
-
 
 clearBtn.addEventListener('click', () => {
     myCanvas.clearAllBtn();

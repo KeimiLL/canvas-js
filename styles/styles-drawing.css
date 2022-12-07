@@ -1,7 +1,3 @@
-:root {
-    box-sizing: border-box;
-}
-
 * {
     background-color: #424899;
     font-family: Arial, Helvetica, sans-serif;
@@ -53,6 +49,12 @@ canvas {
 
 #div-shapes {
     flex-grow: 2;
+    margin: 0;
+    text-align: left;
+}
+
+#div-shapes label {
+    display: block;
 }
 
 .btns {
@@ -64,7 +66,6 @@ canvas {
 
 #clear-btn,
 #undo-btn,
-#save-btn,
 #back-btn {
     width: 120px;
     height: 28px;
@@ -85,10 +86,6 @@ canvas {
     background-color: #dea404;
 }
 
-/* #save-btn {
-    background-color: rgb(255, 210, 112);
-} */
-
 #back-btn {
     background-color: #d1605a;
 }
@@ -99,13 +96,4 @@ canvas {
 
 .feature p {
     font-size: 15px;
-}
-
-#div-shapes {
-    margin: 0;
-    text-align: left;
-}
-
-#div-shapes label {
-    display: block;
 }

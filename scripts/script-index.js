@@ -1,6 +1,3 @@
-// jak ktoś klika przycisk 'Stwórz nowy' to tworzę nowy obiekt myCanvas z kolejnym dostępnym id
-// w pliku script-index mam mieć tablicę obiektów i też zmienną która przechowuje kolejne dostęppne ID
-
 const pathJSON = "json_data/data.json";
 const createBtn = document.querySelector('#create-btn');
 const divDrawings = document.querySelector('.div-drawings');
@@ -11,8 +8,7 @@ window.onload = function () {
     window.setInterval(getDrawings, 1000);
 };
 
-// pobranie rysunkow i potem przekazanie ich do funkcji 
-// wyswietlajacej na glownym ekranie
+// pobranie ilosci rysunkow
 function getDrawings() {
     const xhr = new XMLHttpRequest();
 
@@ -40,7 +36,7 @@ function getDrawings() {
     xhr.send();
 }
 
-// wyswietlenie rysunkow na glownej
+// wyswietlenie odnosnikow na glownej
 function showDrawings() {
     //usuwam wszystkie poprzednie podglądy
     while (divDrawings.firstChild) {
