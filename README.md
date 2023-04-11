@@ -2,12 +2,13 @@
 
 This is a collaborative drawing application that allows multiple users to draw on the same canvas in real-time. The application uses HTML canvas, CSS, JavaScript, AJAX and PHP to create beautiful and interactive animations.
 
-<img src="images/ss1.png" alt="ss1" width="40%"/>
+<p align="center">
+<img src="/images/ss1.jpg" alt="ss1" width="30%"/>
+<br>
+<img src="/images/ss2.jpg" alt="ss2" width="30%"/>
 
-<img src="images/ss2.png" alt="ss2" width="40%"/>
-
-<img src="images/ss3.png" alt="ss3" width="40%"/>
-
+<img src="/images/ss3.jpg" alt="ss3" width="30%"/>
+</p>
 
 
 ## Installation
