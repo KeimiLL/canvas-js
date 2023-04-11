@@ -4,7 +4,7 @@ This is a collaborative drawing application that allows multiple users to draw o
 
 <p align="center">
 <img src="/images/ss1.jpg" alt="ss1" width="30%"/>
-<br>
+
 <img src="/images/ss2.jpg" alt="ss2" width="30%"/>
 
 <img src="/images/ss3.jpg" alt="ss3" width="30%"/>
